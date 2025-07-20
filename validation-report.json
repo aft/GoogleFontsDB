@@ -1,5 +1,5 @@
 {
-  "validation_date": "2025-07-20T16:52:37.782653Z",
+  "validation_date": "2025-07-20T21:40:38.364951Z",
   "errors": 0,
   "warnings": 0,
   "info_messages": 25,
@@ -32,7 +32,7 @@
       "All checksums validated successfully",
       "Compressed database structure validated",
       "Compressed database matches original",
-      "Good compression ratio: 0.63"
+      "Good compression ratio: 0.68"
     ]
   }
 }
