@@ -203,9 +203,15 @@ jobs:
 
       - name: Upload database artifacts
         if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          ARTIFACT_NAME="font-database-$(date -u +"%Y%m%d")"
+          echo "Creating artifact: $ARTIFACT_NAME"
+        
+      - name: Upload artifacts
+        if: steps.check_changes.outputs.changes == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: font-database-$(date -u +"%Y%m%d")
+          name: font-database-${{ github.run_number }}
           path: |
             font-database.json
             font-database-optimized.json
