@@ -1,7 +1,7 @@
 {
-  "generated": "2025-07-20T22:51:50.184077Z",
-  "database_version": "2025/07.2",
-  "database_updated": "2025-07-20T22:50:16.335954Z",
+  "generated": "2025-07-20T23:42:31.589600Z",
+  "database_version": "2025/07.3",
+  "database_updated": "2025-07-20T23:40:57.960184Z",
   "basic": {
     "total_families": 2329,
     "total_variants": 3770,
@@ -324,8 +324,8 @@
       "font-categories-index.json": 39.24,
       "font-popular-index.json": 3.83
     },
-    "database_version": "2025/07.2",
-    "last_updated": "2025-07-20T22:50:16.335954Z",
+    "database_version": "2025/07.3",
+    "last_updated": "2025-07-20T23:40:57.960184Z",
     "optimization_applied": true,
     "total_distribution_size_kb": 23772.39
   }
