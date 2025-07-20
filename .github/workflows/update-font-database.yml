@@ -16,6 +16,10 @@ on:
         default: false
         type: boolean
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   update-database:
     runs-on: ubuntu-latest
@@ -92,6 +96,7 @@ jobs:
         run: |
           rm -rf google-fonts-source/
           rm -rf temp/
+          rm -rf previews/
           echo "Cleanup completed"
 
       - name: Check for changes
@@ -165,8 +170,13 @@ jobs:
           name: font-database-$(date -u +"%Y%m%d")
           path: |
             font-database.json
-            previews/
+            font-database-optimized.json
+            font-database.json.gz
+            font-families-index.json
+            font-categories-index.json
+            font-popular-index.json
             stats.json
+            checksums.json
           retention-days: 30
 
       - name: Post-update summary
@@ -186,6 +196,6 @@ jobs:
           if [ -f "font-database.json" ]; then
             echo "Database: $(du -h font-database.json | cut -f1)"
           fi
-          if [ -d "previews" ]; then
-            echo "Previews: $(du -sh previews/ | cut -f1)"
+          if [ -f "font-database.json.gz" ]; then
+            echo "Compressed: $(du -h font-database.json.gz | cut -f1)"
           fi

@@ -21,10 +21,8 @@ import xml.etree.ElementTree as ET
 
 
 class SVGPreviewGenerator:
-    def __init__(self, database_file="font-database.json", output_dir="previews"):
+    def __init__(self, database_file="font-database.json"):
         self.database_file = database_file
-        self.output_dir = Path(output_dir)
-        self.output_dir.mkdir(exist_ok=True)
         
         # Preview configuration
         self.preview_text = "Aa Bb"  # Short text for minimal size
@@ -206,10 +204,8 @@ class SVGPreviewGenerator:
                 "preview_text": self.preview_text
             }
             
-            # Save individual SVG file for debugging
-            svg_file = self.output_dir / f"{family_name.replace(' ', '_').lower()}.svg"
-            with open(svg_file, 'w', encoding='utf-8') as f:
-                f.write(svg_content)
+            # Note: SVG files are stored compressed in database only
+            # No individual files are saved to keep repository size minimal
             
             successful_previews += 1
             total_size += len(compressed_svg)
