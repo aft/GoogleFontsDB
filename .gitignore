@@ -1,0 +1,18 @@
+# Temporary processing files
+google-fonts-source/
+temp/
+previews/
+
+# Development files
+*.pyc
+__pycache__/
+.env
+.venv/
+venv/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Don't ignore archives - we want historical versions
+!archives/

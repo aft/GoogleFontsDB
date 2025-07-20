@@ -71,6 +71,12 @@ jobs:
           echo "Google Fonts repo cloned successfully"
           du -sh google-fonts-source/
 
+      - name: Archive existing database
+        run: |
+          echo "Archiving existing database files..."
+          python scripts/archive_database.py
+          echo "Database archiving completed"
+
       - name: Generate font metadata database
         run: |
           echo "Starting font metadata extraction..."
@@ -114,12 +120,14 @@ jobs:
           rm -rf google-fonts-source/
           rm -rf temp/
           rm -rf previews/
-          echo "Cleanup completed"
+          # Keep archives directory for historical versions
+          echo "Cleanup completed (archives preserved)"
 
       - name: Check for changes
         id: check_changes
         run: |
           git add .
+          git add archives/ 2>/dev/null || true  # Add archives if they exist
           if git diff --staged --quiet; then
             echo "changes=false" >> $GITHUB_OUTPUT
             echo "No changes detected"
