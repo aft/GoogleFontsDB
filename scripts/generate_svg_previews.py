@@ -26,8 +26,8 @@ class SVGPreviewGenerator:
         
         # Preview configuration will use font family name
         self.font_size = 48
-        self.svg_width = 200  # Increased width for font names
         self.svg_height = 60
+        # No fixed width - let it expand to fit the font name
         
         # Load font database
         with open(database_file, 'r', encoding='utf-8') as f:
@@ -71,16 +71,23 @@ class SVGPreviewGenerator:
                     # Scale and position the glyph
                     scale = self.font_size / font['head'].unitsPerEm
                     
+                    # Get advance width for proper spacing
+                    advance_width = glyph.width if hasattr(glyph, 'width') else 500
+                    
                     paths.append({
                         'path': path_data,
                         'x': x_offset,
                         'scale': scale,
-                        'char': char
+                        'char': char,
+                        'advance_width': advance_width * scale
                     })
-                
-                # Advance x position
-                advance_width = glyph.width if hasattr(glyph, 'width') else 500
-                x_offset += advance_width * scale
+                    
+                    # Advance x position
+                    x_offset += advance_width * scale
+                else:
+                    # For characters without paths, still advance
+                    advance_width = glyph.width if hasattr(glyph, 'width') else 500
+                    x_offset += advance_width * scale
             
             font.close()
             return paths
@@ -94,9 +101,14 @@ class SVGPreviewGenerator:
         if not paths:
             return None
         
-        # Calculate viewBox
-        total_width = max(path['x'] for path in paths) if paths else self.svg_width
-        total_width = min(total_width, self.svg_width)
+        # Calculate viewBox based on actual glyph positions (no width limit)
+        if paths:
+            # Find the rightmost point of all glyphs
+            total_width = max(path['x'] + path.get('advance_width', 0) for path in paths)
+            # Add some padding
+            total_width += 20
+        else:
+            total_width = 200  # Fallback width
         
         # Create minimal SVG with white fill for easier color modulation
         svg_content = f'<svg viewBox="0 0 {total_width:.0f} {self.svg_height}" xmlns="http://www.w3.org/2000/svg">'
