@@ -266,8 +266,12 @@ class DatabaseOptimizer:
         with open(self.optimized_file, 'w', encoding='utf-8') as f:
             json.dump(self.database, f, separators=(',', ':'), ensure_ascii=False)
         
-        # Create compressed version
-        with open(self.optimized_file, 'rb') as f_in:
+        # Update the original database file with optimized version
+        with open(self.database_file, 'w', encoding='utf-8') as f:
+            json.dump(self.database, f, separators=(',', ':'), ensure_ascii=False)
+        
+        # Create compressed version from optimized database
+        with open(self.database_file, 'rb') as f_in:
             with gzip.open(self.compressed_file, 'wb', compresslevel=9) as f_out:
                 f_out.write(f_in.read())
         
@@ -277,8 +281,8 @@ class DatabaseOptimizer:
         compressed_size = Path(self.compressed_file).stat().st_size
         
         print(f"Database optimization completed:")
-        print(f"  Original: {original_size / 1024:.1f} KB")
-        print(f"  Optimized: {optimized_size / 1024:.1f} KB ({(1 - optimized_size/original_size)*100:.1f}% reduction)")
+        print(f"  Database: {original_size / 1024:.1f} KB")
+        print(f"  Optimized copy: {optimized_size / 1024:.1f} KB")
         print(f"  Compressed: {compressed_size / 1024:.1f} KB ({(1 - compressed_size/original_size)*100:.1f}% reduction)")
         
         # Create checksums

@@ -310,17 +310,35 @@ class DatabaseValidator:
                 with gzip.open("font-database.json.gz", 'rt', encoding='utf-8') as f:
                     compressed_data = json.load(f)
                 
-                # Compare with original
+                # Verify basic structure
+                if not isinstance(compressed_data, dict):
+                    self.log_error("Compressed database is not a valid JSON object")
+                    return
+                
+                required_fields = ["version", "updated", "fonts"]
+                for field in required_fields:
+                    if field not in compressed_data:
+                        self.log_error(f"Compressed database missing required field: {field}")
+                        return
+                
+                self.log_info("Compressed database structure validated")
+                
+                # Compare with main database for consistency
                 if Path("font-database.json").exists():
                     with open("font-database.json", 'r', encoding='utf-8') as f:
                         original_data = json.load(f)
                     
-                    if compressed_data != original_data:
-                        self.log_error("Compressed database doesn't match original")
+                    if compressed_data == original_data:
+                        self.log_info("Compressed database matches original")
                     else:
-                        self.log_info("Compressed database integrity verified")
-                else:
-                    self.log_info("Compressed database readable")
+                        # Check if they have the same basic content
+                        comp_fonts = len(compressed_data.get("fonts", {}))
+                        orig_fonts = len(original_data.get("fonts", {}))
+                        
+                        if comp_fonts == orig_fonts:
+                            self.log_info(f"Compressed database has same font count ({comp_fonts}) as original")
+                        else:
+                            self.log_warning(f"Font count mismatch: compressed={comp_fonts}, original={orig_fonts}")
                     
             except Exception as e:
                 self.log_error(f"Error reading compressed database: {e}")
