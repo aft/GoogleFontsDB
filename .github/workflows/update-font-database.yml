@@ -97,6 +97,12 @@ jobs:
         run: |
           python scripts/generate_stats.py
 
+      - name: Generate changelog
+        run: |
+          echo "Generating changelog..."
+          python scripts/generate_changelog.py
+          echo "Changelog generation completed"
+
       - name: Validate generated files
         run: |
           echo "Validating generated files..."
@@ -169,27 +175,40 @@ jobs:
           # Get database size
           DB_SIZE=$(du -h font-database.json | cut -f1)
           
+          # Read changelog content
+          CHANGELOG_CONTENT=""
+          if [ -f "release-changelog.md" ]; then
+            CHANGELOG_CONTENT=$(cat release-changelog.md)
+          fi
+          
           # Create release using GitHub CLI
           gh release create "$RELEASE_TAG" \
             --title "$RELEASE_NAME" \
-            --notes "Automated Google Fonts database update
+            --notes "# Automated Google Fonts Database Update
 
           📊 **Statistics:**
           - Total font families: $FONT_COUNT
           - Database size: $DB_SIZE
           - Generated: $RELEASE_DATE
 
-          🔄 **Changes:**
-          - Updated font metadata from Google Fonts repository
-          - Generated compressed SVG previews
-          - Optimized database structure
+          $CHANGELOG_CONTENT
+
+          ---
 
           📦 **Files:**
           - \`font-database.json\` - Complete database
-          - \`font-database.json.gz\` - Compressed version
+          - \`font-database.json.gz\` - Compressed version  
           - \`font-families-index.json\` - Family names index
           - \`font-categories-index.json\` - Category index
-          - \`stats.json\` - Database statistics" \
+          - \`font-popular-index.json\` - Popular fonts index
+          - \`stats.json\` - Database statistics
+          - \`checksums.json\` - File integrity checksums
+
+          🔄 **Processing:**
+          - Updated font metadata from Google Fonts repository
+          - Generated compressed SVG previews (~800KB total)
+          - Applied database optimization and deduplication
+          - Created specialized index files for different use cases" \
             font-database.json \
             font-database-optimized.json \
             font-database.json.gz \
@@ -221,6 +240,8 @@ jobs:
             font-popular-index.json
             stats.json
             checksums.json
+            CHANGELOG.md
+            release-changelog.md
           retention-days: 30
           compression-level: 9
           if-no-files-found: warn
