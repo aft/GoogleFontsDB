@@ -31,6 +31,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
+          persist-credentials: true
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -73,7 +74,11 @@ jobs:
       - name: Generate SVG font previews
         run: |
           echo "Starting SVG preview generation..."
+          # Ensure no previews directory exists
+          rm -rf previews/
           python scripts/generate_svg_previews.py
+          # Remove any accidentally created preview files
+          rm -rf previews/
           echo "SVG preview generation completed"
 
       - name: Optimize and compress database
@@ -114,8 +119,9 @@ jobs:
       - name: Commit and push changes
         if: steps.check_changes.outputs.changes == 'true'
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git config --global --add safe.directory /github/workspace
           
           # Get current date for commit message
           CURRENT_DATE=$(date -u +"%Y-%m-%d")
