@@ -24,10 +24,9 @@ class SVGPreviewGenerator:
     def __init__(self, database_file="font-database.json"):
         self.database_file = database_file
         
-        # Preview configuration
-        self.preview_text = "Aa Bb"  # Short text for minimal size
+        # Preview configuration will use font family name
         self.font_size = 48
-        self.svg_width = 120
+        self.svg_width = 200  # Increased width for font names
         self.svg_height = 60
         
         # Load font database
@@ -99,7 +98,7 @@ class SVGPreviewGenerator:
         total_width = max(path['x'] for path in paths) if paths else self.svg_width
         total_width = min(total_width, self.svg_width)
         
-        # Create minimal SVG
+        # Create minimal SVG with white fill for easier color modulation
         svg_content = f'<svg viewBox="0 0 {total_width:.0f} {self.svg_height}" xmlns="http://www.w3.org/2000/svg">'
         
         for path_info in paths:
@@ -109,8 +108,8 @@ class SVGPreviewGenerator:
             # Transform path: scale and translate
             transform = f"translate({path_info['x']:.1f},{self.svg_height*0.8}) scale({path_info['scale']:.3f},-{path_info['scale']:.3f})"
             
-            # Add path element
-            svg_content += f'<path d="{path_info["path"]}" transform="{transform}"/>'
+            # Add path element with white fill
+            svg_content += f'<path d="{path_info["path"]}" transform="{transform}" fill="white"/>'
         
         svg_content += '</svg>'
         
@@ -183,8 +182,13 @@ class SVGPreviewGenerator:
             if not font_path.exists():
                 continue
             
+            # Use font family name as preview text (truncated if too long)
+            preview_text = family_name
+            if len(preview_text) > 12:  # Limit length to fit in SVG
+                preview_text = preview_text[:12]
+            
             # Extract glyph paths
-            paths = self.extract_glyph_paths(font_path, self.preview_text)
+            paths = self.extract_glyph_paths(font_path, preview_text)
             if not paths:
                 continue
             
@@ -201,7 +205,7 @@ class SVGPreviewGenerator:
                 "svg_compressed": compressed_svg,
                 "original_size": len(svg_content),
                 "compressed_size": len(compressed_svg),
-                "preview_text": self.preview_text
+                "preview_text": preview_text
             }
             
             # Note: SVG files are stored compressed in database only

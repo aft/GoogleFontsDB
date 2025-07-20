@@ -27,11 +27,67 @@ class GoogleFontsProcessor:
         self.output_file = output_file
         self.base_url = "https://raw.githubusercontent.com/google/fonts/main"
         self.font_database = {
-            "version": datetime.now().strftime("%Y.%m.%d"),
+            "version": self.generate_incremental_version(),
             "updated": datetime.now().isoformat() + "Z",
             "total_families": 0,
             "fonts": {}
         }
+        
+    def generate_incremental_version(self):
+        """Generate incremental version number to avoid conflicts"""
+        now = datetime.now()
+        base_version = now.strftime("%Y/%m")
+        
+        # Check if any existing database files exist with this base version
+        existing_files = []
+        
+        # Look for existing database files in current directory
+        for file_path in Path('.').glob('font-database*.json'):
+            if file_path.exists():
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                        existing_version = data.get('version', '')
+                        if existing_version.startswith(base_version):
+                            existing_files.append(existing_version)
+                except:
+                    continue
+        
+        # Look for database folders that might exist in parent directory
+        parent_dir = Path('..')
+        if parent_dir.exists():
+            for folder in parent_dir.iterdir():
+                if folder.is_dir() and folder.name.startswith(base_version.replace('/', '')):
+                    # Extract version from folder name (e.g., "202507" -> "2025/07")
+                    folder_version = f"{folder.name[:4]}/{folder.name[4:6]}"
+                    if folder.name.count('.') > 0:
+                        # Handle incremental versions in folder names
+                        parts = folder.name.split('.')
+                        if len(parts) > 1:
+                            folder_version += f".{'.'.join(parts[1:])}"
+                    existing_files.append(folder_version)
+        
+        if not existing_files:
+            return base_version
+        
+        # Find the highest incremental version
+        max_increment = 0
+        for version in existing_files:
+            if version.startswith(base_version):
+                if version == base_version:
+                    max_increment = max(max_increment, 1)
+                elif '.' in version[len(base_version):]:
+                    try:
+                        increment_part = version[len(base_version)+1:]  # Skip the dot
+                        increment = int(increment_part.split('.')[0])
+                        max_increment = max(max_increment, increment + 1)
+                    except ValueError:
+                        continue
+        
+        if max_increment == 0:
+            return base_version
+        else:
+            return f"{base_version}.{max_increment}"
         
     def extract_font_metadata(self, font_path):
         """Extract metadata from a font file"""
