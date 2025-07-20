@@ -1,0 +1,38 @@
+{
+  "validation_date": "2025-07-20T16:27:59.072847Z",
+  "errors": 0,
+  "warnings": 0,
+  "info_messages": 25,
+  "overall_status": "PASS",
+  "details": {
+    "errors": [],
+    "warnings": [],
+    "info": [
+      "Required file found: font-database.json",
+      "Required file found: font-families-index.json",
+      "Required file found: font-categories-index.json",
+      "Required file found: font-popular-index.json",
+      "Required file found: stats.json",
+      "Optional file found: font-database-optimized.json",
+      "Optional file found: font-database.json.gz",
+      "Optional file found: checksums.json",
+      "JSON structure valid: font-database.json",
+      "JSON structure valid: font-families-index.json",
+      "JSON structure valid: font-categories-index.json",
+      "JSON structure valid: font-popular-index.json",
+      "JSON structure valid: stats.json",
+      "JSON structure valid: font-database-optimized.json",
+      "JSON structure valid: checksums.json",
+      "Preview validation: 21 previews checked, 0 errors (0.0% error rate)",
+      "Checksum valid: font-database-optimized.json",
+      "Checksum valid: font-database.json.gz",
+      "Checksum valid: font-families-index.json",
+      "Checksum valid: font-categories-index.json",
+      "Checksum valid: font-popular-index.json",
+      "All checksums validated successfully",
+      "Compressed database structure validated",
+      "Compressed database matches original",
+      "Good compression ratio: 0.63"
+    ]
+  }
+}
