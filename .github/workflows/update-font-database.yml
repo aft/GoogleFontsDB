@@ -160,7 +160,7 @@ jobs:
 
       - name: Upload database artifacts
         if: steps.check_changes.outputs.changes == 'true'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: font-database-$(date -u +"%Y%m%d")
           path: |
