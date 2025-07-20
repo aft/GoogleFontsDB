@@ -1,7 +1,7 @@
 {
-  "generated": "2025-07-20T21:40:37.208716Z",
-  "database_version": "2025/07",
-  "database_updated": "2025-07-20T21:39:03.267704Z",
+  "generated": "2025-07-20T22:32:57.560585Z",
+  "database_version": "2025/07.1",
+  "database_updated": "2025-07-20T22:31:22.021245Z",
   "basic": {
     "total_families": 2329,
     "total_variants": 3770,
@@ -103,8 +103,8 @@
   },
   "previews": {
     "families_with_previews": 2258,
-    "total_compressed_size": 7982656,
-    "avg_preview_size": 3535.0,
+    "total_compressed_size": 7983264,
+    "avg_preview_size": 3536.0,
     "median_preview_size": 2144.0,
     "min_preview_size": 208,
     "max_preview_size": 119520,
@@ -314,19 +314,19 @@
     }
   },
   "database": {
-    "original_database_size_kb": 8840.07,
+    "original_database_size_kb": 8840.67,
     "optimized_files": {
-      "font-database-optimized.json": 8840.07,
-      "font-database.json.gz": 6007.66
+      "font-database-optimized.json": 8840.67,
+      "font-database.json.gz": 6008.77
     },
     "index_files": {
       "font-families-index.json": 39.19,
       "font-categories-index.json": 39.24,
-      "font-popular-index.json": 3.82
+      "font-popular-index.json": 3.83
     },
-    "database_version": "2025/07",
-    "last_updated": "2025-07-20T21:39:03.267704Z",
+    "database_version": "2025/07.1",
+    "last_updated": "2025-07-20T22:31:22.021245Z",
     "optimization_applied": true,
-    "total_distribution_size_kb": 23770.07
+    "total_distribution_size_kb": 23772.37
   }
 }
