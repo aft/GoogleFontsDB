@@ -152,28 +152,54 @@ jobs:
 
       - name: Create release
         if: steps.check_changes.outputs.changes == 'true'
-        uses: actions/create-release@v1
+        run: |
+          # Generate release tag and name
+          RELEASE_TAG="v$(date -u +"%Y.%m.%d")"
+          RELEASE_NAME="Font Database $(date -u +"%Y.%m.%d")"
+          RELEASE_DATE="$(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+          
+          # Get font count from database
+          FONT_COUNT=$(python -c "
+          import json
+          with open('font-database.json', 'r') as f:
+              data = json.load(f)
+              print(len(data.get('fonts', {})))
+          ")
+          
+          # Get database size
+          DB_SIZE=$(du -h font-database.json | cut -f1)
+          
+          # Create release using GitHub CLI
+          gh release create "$RELEASE_TAG" \
+            --title "$RELEASE_NAME" \
+            --notes "Automated Google Fonts database update
+
+          📊 **Statistics:**
+          - Total font families: $FONT_COUNT
+          - Database size: $DB_SIZE
+          - Generated: $RELEASE_DATE
+
+          🔄 **Changes:**
+          - Updated font metadata from Google Fonts repository
+          - Generated compressed SVG previews
+          - Optimized database structure
+
+          📦 **Files:**
+          - \`font-database.json\` - Complete database
+          - \`font-database.json.gz\` - Compressed version
+          - \`font-families-index.json\` - Family names index
+          - \`font-categories-index.json\` - Category index
+          - \`stats.json\` - Database statistics" \
+            font-database.json \
+            font-database-optimized.json \
+            font-database.json.gz \
+            font-families-index.json \
+            font-categories-index.json \
+            font-popular-index.json \
+            stats.json \
+            checksums.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v$(date -u +"%Y.%m.%d")
-          release_name: Font Database $(date -u +"%Y.%m.%d")
-          body: |
-            Automated Google Fonts database update
-            
-            📊 **Statistics:**
-            - Total font families: ${{ steps.stats.outputs.font_count }}
-            - Database size: ${{ steps.stats.outputs.db_size }}
-            - Preview files: ${{ steps.stats.outputs.preview_count }}
-            
-            🔄 **Changes:**
-            - Updated font metadata from Google Fonts repository
-            - Generated compressed SVG previews
-            - Optimized database structure
-            
-            📅 **Generated:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
-          draft: false
-          prerelease: false
 
       - name: Upload database artifacts
         if: steps.check_changes.outputs.changes == 'true'
