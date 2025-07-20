@@ -1,7 +1,7 @@
 {
-  "generated": "2025-07-20T16:47:07.214397Z",
-  "database_version": "2025.07.20",
-  "database_updated": "2025-07-20T16:45:38.644265Z",
+  "generated": "2025-07-20T21:40:37.208716Z",
+  "database_version": "2025/07",
+  "database_updated": "2025-07-20T21:39:03.267704Z",
   "basic": {
     "total_families": 2329,
     "total_variants": 3770,
@@ -103,12 +103,12 @@
   },
   "previews": {
     "families_with_previews": 2258,
-    "total_compressed_size": 4821432,
-    "avg_preview_size": 2135.0,
-    "median_preview_size": 1336.0,
-    "min_preview_size": 188,
-    "max_preview_size": 69420,
-    "total_preview_size_mb": 4.6
+    "total_compressed_size": 7982656,
+    "avg_preview_size": 3535.0,
+    "median_preview_size": 2144.0,
+    "min_preview_size": 208,
+    "max_preview_size": 119520,
+    "total_preview_size_mb": 7.61
   },
   "licenses": {
     "distribution": {
@@ -314,19 +314,19 @@
     }
   },
   "database": {
-    "original_database_size_kb": 5741.13,
+    "original_database_size_kb": 8840.07,
     "optimized_files": {
-      "font-database-optimized.json": 5741.13,
-      "font-database.json.gz": 3619.6
+      "font-database-optimized.json": 8840.07,
+      "font-database.json.gz": 6007.66
     },
     "index_files": {
       "font-families-index.json": 39.19,
-      "font-categories-index.json": 39.25,
-      "font-popular-index.json": 3.83
+      "font-categories-index.json": 39.24,
+      "font-popular-index.json": 3.82
     },
-    "database_version": "2025.07.20",
-    "last_updated": "2025-07-20T16:45:38.644265Z",
+    "database_version": "2025/07",
+    "last_updated": "2025-07-20T21:39:03.267704Z",
     "optimization_applied": true,
-    "total_distribution_size_kb": 15184.12
+    "total_distribution_size_kb": 23770.07
   }
 }
