@@ -4,6 +4,8 @@ Changelog Generation Script
 
 Compares the current font database with the previous version to generate
 a detailed changelog of new fonts, updated fonts, and removed fonts.
+
+Cem Baspinar, 2025, MIT License.
 """
 
 import os
