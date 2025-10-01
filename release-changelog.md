@@ -1,14 +1,28 @@
 ## 📈 Database Changes
 
-**Total font families:** 2,343 (+3 from previous version)
+**Total font families:** 2,354 (+11 from previous version)
 
-### ✨ New Fonts (3)
+### ✨ New Fonts (11)
+
+**Monospace:**
+- **SUSE Mono Thin** (2 variants)
 
 **Sans-Serif:**
-- **Cossette Texte** (2 variants)
-- **Cossette Titre** (2 variants)
-- **Vend Sans Light** (2 variants)
+- **Alan Sans Light** (1 variants)
+- **BBH Sans Bartle** (1 variants)
+- **BBH Sans Bogle** (1 variants)
+- **BBH Sans Hegarty** (1 variants)
+- **Bitcount Grid Double Ink** (1 variants)
+- **Bitcount Grid Single Ink** (1 variants)
+- **Bitcount Ink** (1 variants)
+- **Bitcount Prop Double Ink** (1 variants)
+- **Momo Signature** (1 variants)
+- **Momo Trust Sans** (1 variants)
 
 ### 🔄 Updated Fonts (1)
 
-- **Noto Sans NKo**: Preview added
+- **SUSE Thin**: 1 → 2 variants (+1)
+
+### 🆕 New Variants (1 families)
+
+- **SUSE Thin**: 400 italic
