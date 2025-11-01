@@ -1,28 +1,25 @@
 ## 📈 Database Changes
 
-**Total font families:** 2,354 (+11 from previous version)
+**Total font families:** 2,366 (+12 from previous version)
 
-### ✨ New Fonts (11)
+### ✨ New Fonts (12)
 
-**Monospace:**
-- **SUSE Mono Thin** (2 variants)
+**Display:**
+- **Momo Trust Display** (1 variants)
+- **Stack Sans Headline ExtraLight** (1 variants)
 
 **Sans-Serif:**
-- **Alan Sans Light** (1 variants)
-- **BBH Sans Bartle** (1 variants)
-- **BBH Sans Bogle** (1 variants)
-- **BBH Sans Hegarty** (1 variants)
-- **Bitcount Grid Double Ink** (1 variants)
-- **Bitcount Grid Single Ink** (1 variants)
-- **Bitcount Ink** (1 variants)
-- **Bitcount Prop Double Ink** (1 variants)
-- **Momo Signature** (1 variants)
-- **Momo Trust Sans** (1 variants)
+- **Elms Sans Thin** (2 variants)
+- **Kedebideri Black** (1 variants)
+- **Kedebideri ExtraBold** (1 variants)
+- **Kedebideri Medium** (1 variants)
+- **Kedebideri SemiBold** (1 variants)
+- **Kedebideri** (2 variants)
+- **Noto Sans Syriac Western** (1 variants)
+- **Science Gothic** (1 variants)
+- **Stack Sans Notch ExtraLight** (1 variants)
+- **Stack Sans Text ExtraLight** (1 variants)
 
 ### 🔄 Updated Fonts (1)
 
-- **SUSE Thin**: 1 → 2 variants (+1)
-
-### 🆕 New Variants (1 families)
-
-- **SUSE Thin**: 400 italic
+- **Libre Baskerville**: 3 → 2 variants (-1)
