@@ -1,25 +1,24 @@
 ## 📈 Database Changes
 
-**Total font families:** 2,366 (+12 from previous version)
+**Total font families:** 2,374 (+8 from previous version)
 
-### ✨ New Fonts (12)
-
-**Display:**
-- **Momo Trust Display** (1 variants)
-- **Stack Sans Headline ExtraLight** (1 variants)
+### ✨ New Fonts (11)
 
 **Sans-Serif:**
-- **Elms Sans Thin** (2 variants)
-- **Kedebideri Black** (1 variants)
-- **Kedebideri ExtraBold** (1 variants)
-- **Kedebideri Medium** (1 variants)
-- **Kedebideri SemiBold** (1 variants)
-- **Kedebideri** (2 variants)
-- **Noto Sans Syriac Western** (1 variants)
-- **Science Gothic** (1 variants)
-- **Stack Sans Notch ExtraLight** (1 variants)
-- **Stack Sans Text ExtraLight** (1 variants)
+- **Amarna** (2 variants)
+- **BBH Bartle** (1 variants)
+- **BBH Bogle** (1 variants)
+- **BBH Hegarty** (1 variants)
+- **Geom** (2 variants)
+- **Gveret Levin** (1 variants)
+- **LINE Seed JP ExtraBold** (1 variants)
+- **LINE Seed JP Thin** (1 variants)
+- **LINE Seed JP** (2 variants)
+- **Lilex** (2 variants)
+- ... and 1 more sans-serif fonts
 
-### 🔄 Updated Fonts (1)
+### ❌ Removed Fonts (3)
 
-- **Libre Baskerville**: 3 → 2 variants (-1)
+- BBH Sans Bartle
+- BBH Sans Bogle
+- BBH Sans Hegarty
