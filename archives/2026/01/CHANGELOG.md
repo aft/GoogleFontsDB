@@ -2,20 +2,6 @@
 
 All notable changes to the Google Fonts database will be documented in this file.
 
-## [2026/01] - 2026-01-01
-
-## 📈 Database Changes
-
-**Total font families:** 2,376 (+2 from previous version)
-
-### ✨ New Fonts (2)
-
-**Sans-Serif:**
-- **Cause** (1 variants)
-- **SN Pro ExtraLight** (2 variants)
-
----
-
 ## [2025/12] - 2025-12-01
 
 ## 📈 Database Changes
