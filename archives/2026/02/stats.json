@@ -1,20 +1,20 @@
 {
-  "generated": "2026-02-01T04:28:14.745627Z",
-  "database_version": "2026/02",
-  "database_updated": "2026-02-01T04:27:47.711284Z",
+  "generated": "2026-01-01T03:47:58.472558Z",
+  "database_version": "2026/01",
+  "database_updated": "2026-01-01T03:47:29.676505Z",
   "basic": {
-    "total_families": 2378,
-    "total_variants": 3834,
+    "total_families": 2376,
+    "total_variants": 3832,
     "avg_variants_per_family": 1.61,
     "categories": {
-      "sans-serif": 2108,
+      "sans-serif": 2106,
       "serif": 129,
       "monospace": 63,
       "handwriting": 50,
       "display": 28
     },
     "weights": {
-      "400": 2578,
+      "400": 2576,
       "700": 521,
       "300": 220,
       "500": 125,
@@ -24,26 +24,26 @@
       "900": 70
     },
     "styles": {
-      "normal": 3121,
+      "normal": 3119,
       "italic": 710,
       "oblique": 3
     }
   },
   "file_sizes": {
     "overall": {
-      "total_files": 2652,
-      "total_size_mb": 1734.73,
-      "avg_size_kb": 669.82,
-      "median_size_kb": 152.71,
+      "total_files": 2650,
+      "total_size_mb": 1733.99,
+      "avg_size_kb": 670.04,
+      "median_size_kb": 152.08,
       "min_size_kb": 14.45,
       "max_size_kb": 57346.46,
-      "std_dev_kb": 2571.51
+      "std_dev_kb": 2572.47
     },
     "by_category": {
       "sans-serif": {
-        "count": 2339,
-        "avg_size_kb": 651.24,
-        "total_size_mb": 1487.56
+        "count": 2337,
+        "avg_size_kb": 651.48,
+        "total_size_mb": 1486.82
       },
       "serif": {
         "count": 160,
@@ -68,8 +68,8 @@
     },
     "by_weight": {
       "400": {
-        "count": 1739,
-        "avg_size_kb": 717.61
+        "count": 1737,
+        "avg_size_kb": 718.0
       },
       "300": {
         "count": 84,
@@ -102,17 +102,17 @@
     }
   },
   "previews": {
-    "families_with_previews": 2308,
-    "total_compressed_size": 8128704,
+    "families_with_previews": 2306,
+    "total_compressed_size": 8121152,
     "avg_preview_size": 3522.0,
     "median_preview_size": 2136.0,
     "min_preview_size": 208,
     "max_preview_size": 119520,
-    "total_preview_size_mb": 7.75
+    "total_preview_size_mb": 7.74
   },
   "licenses": {
     "distribution": {
-      "OFL": 2319,
+      "OFL": 2317,
       "LICENSE": 45,
       "Apache": 6,
       "LICENCE": 5,
@@ -120,7 +120,7 @@
     },
     "by_category": {
       "sans-serif": {
-        "OFL": 2049,
+        "OFL": 2047,
         "LICENSE": 45,
         "Apache": 6,
         "LICENCE": 5,
@@ -285,7 +285,7 @@
         "weights": 8
       }
     ],
-    "single_variant_families": 1719,
+    "single_variant_families": 1717,
     "multi_variant_families": 659
   },
   "quality": {
@@ -305,28 +305,28 @@
       "weights_covered": 8,
       "most_common_category": [
         "sans-serif",
-        2108
+        2106
       ],
       "most_common_weight": [
         400,
-        2578
+        2576
       ]
     }
   },
   "database": {
-    "original_database_size_kb": 9004.42,
+    "original_database_size_kb": 8996.25,
     "optimized_files": {
-      "font-database-optimized.json": 9004.42,
-      "font-database.json.gz": 6113.86
+      "font-database-optimized.json": 8996.25,
+      "font-database.json.gz": 6108.14
     },
     "index_files": {
-      "font-families-index.json": 40.06,
-      "font-categories-index.json": 40.12,
+      "font-families-index.json": 40.01,
+      "font-categories-index.json": 40.07,
       "font-popular-index.json": 3.79
     },
-    "database_version": "2026/02",
-    "last_updated": "2026-02-01T04:27:47.711284Z",
+    "database_version": "2026/01",
+    "last_updated": "2026-01-01T03:47:29.676505Z",
     "optimization_applied": true,
-    "total_distribution_size_kb": 24206.67
+    "total_distribution_size_kb": 24184.5
   }
 }

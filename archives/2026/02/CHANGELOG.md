@@ -2,20 +2,6 @@
 
 All notable changes to the Google Fonts database will be documented in this file.
 
-## [2026/02] - 2026-02-01
-
-## 📈 Database Changes
-
-**Total font families:** 2,378 (+2 from previous version)
-
-### ✨ New Fonts (2)
-
-**Sans-Serif:**
-- **Playwrite NZ Basic Guides** (1 variants)
-- **Playwrite NZ Basic** (1 variants)
-
----
-
 ## [2026/01] - 2026-01-01
 
 ## 📈 Database Changes
