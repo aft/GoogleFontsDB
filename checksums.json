@@ -1,7 +1,7 @@
 {
-  "font-database-optimized.json": "c29f7bf922081740c9ba797d9c80ac0737e4575719da5f6582f3d383e1519eb7",
-  "font-database.json.gz": "167c1743efbe6019d3e0283fec3cc30eb6c9eec7bf8ee91a010f62d5e43ea7f8",
-  "font-families-index.json": "870bbf7fcc2b9a5bf4b8a0a0aa5bcd531ff24c08fd7db51d4e907e41f6b453e2",
-  "font-categories-index.json": "9133a418c8319f89153f546aa9885dd4d08726792ba19a8eb05ce9ff870f0f2b",
-  "font-popular-index.json": "a8738626c90db86064a2745b79195ee72c423530b58551b13d199bea51329380"
+  "font-database-optimized.json": "3b441a618e5c6913240cdd5725d94a4d1492ae8a698450ba193069a7e4914816",
+  "font-database.json.gz": "140e6afee9e39f0824ccab24bb8a9a7ceca8fcc4a9d15b015df7d3d957cd2092",
+  "font-families-index.json": "9694b1377876b59563c8af69c06a7a4abb710f05bdbd9260a415103c6b751631",
+  "font-categories-index.json": "92c6a690c848ab1316fe4d478d4443c3256d6c3200246d9964faa928b014d876",
+  "font-popular-index.json": "894fec406af002926208c2fba9b3aa70dbdc5689a24659d13b1a81cc721b219c"
 }

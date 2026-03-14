@@ -2,6 +2,19 @@
 
 All notable changes to the Google Fonts database will be documented in this file.
 
+## [2026/03.1] - 2026-03-14
+
+## 📈 Database Changes
+
+**Total font families:** 2,400 (+1 from previous version)
+
+### ✨ New Fonts (1)
+
+**Sans-Serif:**
+- **Miranda Sans** (2 variants)
+
+---
+
 ## [2026/03] - 2026-03-01
 
 ## 📈 Database Changes
