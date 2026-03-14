@@ -1,6 +1,6 @@
 # Google Fonts Database
 
-Automated processing pipeline for creating optimized Google Fonts metadata and preview database for use in applications and editors.
+Automated processing pipeline for creating optimized Google Fonts metadata and preview database for use in applications and editors. The whole Google Fonts database is under 10mb, single json file, has previews.
 
 ## Overview
 
@@ -127,8 +127,6 @@ document.getElementById('preview').innerHTML = svgContent;
 ### Dependencies
 - **fonttools**: TTF file analysis and glyph path extraction
 - **Python 3.11**: Core processing language
-- **GitHub Actions**: Automated monthly updates
-- **Ubuntu Latest**: Processing environment
 
 ### Performance Metrics
 - **Processing Time**: ~30 minutes for complete pipeline
@@ -155,7 +153,6 @@ The repository uses automated workflows for:
 - **Monthly updates** from Google Fonts repository
 - **Quality validation** of generated data
 - **Release creation** with database artifacts
-- **Performance monitoring** and statistics
 
 ## Integration Examples
 

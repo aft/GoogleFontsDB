@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Font Search - Semantic</title>
+    <script>
+        // ============================================================
+        // SET YOUR OPENAI API KEY HERE
+        // ============================================================
+        const OPENAI_API_KEY = "";
+        // ============================================================
+    </script>
+    <style>
+        :root {
+            --bg: #fafafa;
+            --surface: #fff;
+            --border: #e5e5e5;
+            --text: #1a1a1a;
+            --text-secondary: #888;
+            --accent: #1a1a1a;
+            --accent-soft: #f0f0f0;
+            --radius: 10px;
+            --dot: #4a90d9;
+            --dot-hover: #2563eb;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #111;
+                --surface: #1a1a1a;
+                --border: #2a2a2a;
+                --text: #f0f0f0;
+                --text-secondary: #777;
+                --accent: #fff;
+                --accent-soft: #222;
+                --dot: #6aadff;
+                --dot-hover: #93c5fd;
+            }
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ── Header ── */
+        header {
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .tabs {
+            display: flex;
+            gap: 2px;
+            margin-left: 16px;
+        }
+        .tab {
+            padding: 6px 16px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--surface);
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+        .tab:hover { border-color: var(--text-secondary); color: var(--text); }
+        .tab.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+        .search-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+        .search-area input {
+            flex: 1;
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+        }
+        .search-area input:focus { border-color: var(--text-secondary); }
+        .search-area input::placeholder { color: var(--text-secondary); }
+        .search-btn {
+            padding: 8px 18px;
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            background: var(--accent);
+            color: var(--bg);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: opacity 0.15s;
+        }
+        .search-btn:hover { opacity: 0.85; }
+        .search-btn:disabled { opacity: 0.4; cursor: default; }
+
+        /* ── Content ── */
+        .content { flex: 1; overflow: hidden; position: relative; }
+        .tab-panel { display: none; height: 100%; }
+        .tab-panel.active { display: flex; }
+
+        /* ── Search Results ── */
+        #search-panel {
+            flex-direction: column;
+        }
+        .results-header {
+            padding: 12px 24px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .results {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 24px;
+        }
+        .result-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 8px;
+            background: var(--surface);
+            cursor: default;
+            transition: box-shadow 0.15s;
+        }
+        .result-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .result-rank {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--border);
+            min-width: 32px;
+            text-align: center;
+        }
+        .result-preview {
+            width: 160px;
+            height: 48px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .result-preview svg {
+            width: 100%;
+            max-height: 40px;
+            fill: var(--text);
+        }
+        .result-info { flex: 1; min-width: 0; }
+        .result-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .result-mood {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-style: italic;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .result-keywords {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .result-kw {
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .result-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            min-width: 50px;
+            text-align: right;
+        }
+        .result-score span {
+            font-size: 11px;
+            font-weight: 400;
+            display: block;
+        }
+        .result-cat {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 2px 7px;
+            border-radius: 4px;
+            background: var(--accent-soft);
+            color: var(--text-secondary);
+            margin-left: 8px;
+        }
+
+        /* ── Map ── */
+        #map-panel, #network-panel {
+            position: relative;
+        }
+        #map-canvas {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+        #map-canvas.grabbing, #net-canvas.grabbing { cursor: grabbing; }
+        #map-canvas.dragging-dot, #net-canvas.dragging-dot { cursor: move; }
+        #net-canvas {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+        .graph-tooltip {
+            position: absolute;
+            padding: 8px 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 12px;
+            pointer-events: none;
+            display: none;
+            z-index: 10;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .graph-tooltip .tt-preview {
+            width: 200px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            border-radius: 4px;
+            margin-bottom: 6px;
+            overflow: hidden;
+        }
+        .graph-tooltip .tt-preview svg {
+            width: 100%;
+            max-height: 36px;
+            fill: var(--text);
+        }
+        .graph-tooltip .tt-name { font-weight: 600; margin-bottom: 2px; }
+        .graph-tooltip .tt-mood { font-style: italic; color: var(--text-secondary); font-size: 11px; }
+        .graph-tooltip .tt-cat {
+            display: inline-block; font-size: 9px; font-weight: 600;
+            text-transform: uppercase; padding: 1px 5px; border-radius: 3px;
+            background: var(--accent-soft); color: var(--text-secondary); margin-top: 3px;
+        }
+        /* ── Network side panel ── */
+        .net-side-panel {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 220px;
+            height: 100%;
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            z-index: 6;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .panel-section-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .panel-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: all 0.15s;
+            border: 1px solid transparent;
+        }
+        .panel-option:hover { background: var(--accent-soft); color: var(--text); }
+        .panel-option.active {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+        .panel-option-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .map-controls {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            display: flex;
+            gap: 4px;
+            z-index: 5;
+        }
+        .map-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--surface);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 16px;
+            user-select: none;
+        }
+        .map-btn:hover { border-color: var(--text-secondary); color: var(--text); }
+        .map-legend {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 11px;
+            z-index: 5;
+        }
+        .map-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 3px;
+        }
+        .map-legend-item:last-child { margin-bottom: 0; }
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* ── Status ── */
+        .status-bar {
+            padding: 8px 24px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .no-key-warning {
+            text-align: center;
+            padding: 60px 24px;
+            color: var(--text-secondary);
+        }
+        .no-key-warning code {
+            background: var(--accent-soft);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .spinner-inline {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border);
+            border-top-color: var(--text);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .empty-state {
+            text-align: center;
+            padding: 60px 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">GoogleFontsDB</div>
+        <div class="tabs">
+            <button class="tab active" data-tab="search">Search</button>
+            <button class="tab" data-tab="map">Map</button>
+            <button class="tab" data-tab="network">Network</button>
+        </div>
+        <div class="search-area">
+            <input id="query" type="text" placeholder="Describe the mood... e.g. 'playful and modern with rounded shapes'" />
+            <button class="search-btn" id="search-btn">Search</button>
+        </div>
+    </header>
+
+    <div class="content">
+        <div class="tab-panel active" id="search-panel">
+            <div class="results-header" id="results-header"></div>
+            <div class="results" id="results">
+                <div class="empty-state">Describe the font mood you're looking for and hit Search.</div>
+            </div>
+        </div>
+        <div class="tab-panel" id="map-panel">
+            <canvas id="map-canvas"></canvas>
+            <div id="map-tooltip" class="graph-tooltip">
+                <div class="tt-preview"></div>
+                <div class="tt-name"></div>
+                <div class="tt-mood"></div>
+                <div class="tt-cat"></div>
+            </div>
+            <div class="map-legend" id="map-legend"></div>
+            <div class="map-controls">
+                <button class="map-btn" id="zoom-in" title="Zoom in">+</button>
+                <button class="map-btn" id="zoom-out" title="Zoom out">-</button>
+                <button class="map-btn" id="zoom-reset" title="Reset view">&#8634;</button>
+            </div>
+        </div>
+        <div class="tab-panel" id="network-panel">
+            <canvas id="net-canvas"></canvas>
+            <div id="net-tooltip" class="graph-tooltip">
+                <div class="tt-preview"></div>
+                <div class="tt-name"></div>
+                <div class="tt-mood"></div>
+                <div class="tt-cat"></div>
+            </div>
+            <div class="net-side-panel" id="net-panel">
+                <div>
+                    <div class="panel-section-title">Cluster By</div>
+                    <div class="panel-option active" data-cluster="similarity">Combined Similarity</div>
+                    <div class="panel-option" data-cluster="mood">Mood Only</div>
+                    <div class="panel-option" data-cluster="kw_embedding">Keywords Only</div>
+                    <div class="panel-option" data-cluster="category">Category</div>
+                    <div class="panel-option" data-cluster="thickness">Perceived Thickness</div>
+                    <div class="panel-option" data-cluster="keywords">Shared Keywords</div>
+                </div>
+                <div>
+                    <div class="panel-section-title">Color By</div>
+                    <div class="panel-option active" data-color="category">Category</div>
+                    <div class="panel-option" data-color="thickness">Thickness</div>
+                    <div class="panel-option" data-color="heatmap">Search Heatmap</div>
+                </div>
+            </div>
+            <div class="map-legend" id="net-legend" style="right:236px"></div>
+            <div class="map-controls">
+                <button class="map-btn" id="net-zoom-in" title="Zoom in">+</button>
+                <button class="map-btn" id="net-zoom-out" title="Zoom out">-</button>
+                <button class="map-btn" id="net-zoom-reset" title="Reset">&#8634;</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar" id="status">Loading embeddings...</div>
+
+    <script>
+    // ── State ──
+    let embeddingsData = null;
+    let fontDb = null;
+    let fontNames = [];
+    let fontVecs = [];      // combined vectors
+    let fontMoodVecs = [];  // mood-only vectors
+    let fontKwVecs = [];    // keyword-only vectors
+    let fontPositions = []; // [{x, y}]
+    let currentResults = [];
+    let netClusterMode = "similarity";
+    let netColorMode = "category";
+    let searchScores = null;  // {index: score} for heatmap
+    let netHighlighted = new Set();
+
+    // Category colors
+    const CAT_COLORS = {
+        "sans-serif": "#4a90d9",
+        "serif": "#e07b54",
+        "display": "#8b5cf6",
+        "handwriting": "#22c55e",
+        "monospace": "#f59e0b"
+    };
+    const THICKNESS_COLORS = {
+        "thin": "#93c5fd", "extra-light": "#60a5fa", "light": "#38bdf8",
+        "regular": "#22c55e", "medium": "#a3e635",
+        "semi-bold": "#facc15", "bold": "#f59e0b",
+        "extra-bold": "#f97316", "black": "#ef4444", "extra-black": "#dc2626"
+    };
+    const THICKNESS_LABELS = {
+        "thin": "Thin", "extra-light": "Extra Light", "light": "Light",
+        "regular": "Regular", "medium": "Medium", "semi-bold": "Semi Bold",
+        "bold": "Bold", "extra-bold": "Extra Bold", "black": "Black", "extra-black": "Extra Black"
+    };
+
+    const CAT_LABELS = {
+        "sans-serif": "Sans Serif",
+        "serif": "Serif",
+        "display": "Display",
+        "handwriting": "Handwriting",
+        "monospace": "Monospace"
+    };
+
+    // ── Load data ──
+    async function loadData() {
+        try {
+            const [embResp, dbResp] = await Promise.all([
+                fetch("font-embeddings.json"),
+                fetch("font-database-decorated.json")
+            ]);
+            if (!embResp.ok) throw new Error("font-embeddings.json not found. Run build_embeddings.py first.");
+            embeddingsData = await embResp.json();
+            fontDb = (await dbResp.json()).fonts;
+
+            // Parse into arrays for fast search
+            const fonts = embeddingsData.fonts;
+            fontNames = Object.keys(fonts);
+            fontVecs = fontNames.map(n => new Float64Array(fonts[n].vec));
+            fontMoodVecs = fontNames.map(n => fonts[n].mood_vec ? new Float64Array(fonts[n].mood_vec) : fontVecs[fontNames.indexOf(n)]);
+            fontKwVecs = fontNames.map(n => fonts[n].kw_vec ? new Float64Array(fonts[n].kw_vec) : fontVecs[fontNames.indexOf(n)]);
+            fontPositions = fontNames.map(n => ({
+                x: fonts[n].pos[0],
+                y: fonts[n].pos[1],
+                ox: fonts[n].pos[0],  // original positions (for reset)
+                oy: fonts[n].pos[1]
+            }));
+
+            setStatus(`Loaded ${fontNames.length} font embeddings.`);
+            initMap();
+            initNetwork();
+        } catch (e) {
+            setStatus("Error: " + e.message);
+        }
+    }
+
+    function setStatus(msg) {
+        document.getElementById("status").textContent = msg;
+    }
+
+    // ── Tabs ──
+    document.querySelectorAll(".tab").forEach(tab => {
+        tab.onclick = () => {
+            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+            document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+            tab.classList.add("active");
+            document.getElementById(tab.dataset.tab + "-panel").classList.add("active");
+            if (tab.dataset.tab === "map") resizeMap();
+            if (tab.dataset.tab === "network") resizeNet();
+        };
+    });
+
+    // ── Search ──
+    async function embedQuery(text) {
+        if (!OPENAI_API_KEY) {
+            throw new Error("API key not set. Edit the OPENAI_API_KEY variable at the top of this file.");
+        }
+        const resp = await fetch("https://api.openai.com/v1/embeddings", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + OPENAI_API_KEY
+            },
+            body: JSON.stringify({
+                input: text,
+                model: "text-embedding-3-large",
+                dimensions: 1024
+            })
+        });
+        if (!resp.ok) {
+            const err = await resp.json().catch(() => ({}));
+            throw new Error(err.error?.message || "Embedding API error " + resp.status);
+        }
+        const data = await resp.json();
+        return new Float64Array(data.data[0].embedding);
+    }
+
+    function cosineSim(a, b) {
+        let dot = 0, na = 0, nb = 0;
+        for (let i = 0; i < a.length; i++) {
+            dot += a[i] * b[i];
+            na += a[i] * a[i];
+            nb += b[i] * b[i];
+        }
+        return dot / (Math.sqrt(na) * Math.sqrt(nb));
+    }
+
+    async function doSearch() {
+        const query = document.getElementById("query").value.trim();
+        if (!query) return;
+        if (!embeddingsData) { setStatus("Embeddings not loaded yet."); return; }
+
+        const btn = document.getElementById("search-btn");
+        btn.disabled = true;
+        btn.textContent = "Searching...";
+        setStatus("Embedding query...");
+
+        try {
+            // Query expansion: frame it like a mood description
+            const expandedQuery = `A font that feels: ${query}`;
+            const queryVec = await embedQuery(expandedQuery);
+            setStatus("Computing similarities...");
+
+            // Tokenize query for keyword boosting
+            const queryTokens = query.toLowerCase().split(/[\s,]+/).filter(t => t.length > 1);
+
+            // Score all fonts against mood + keyword vectors separately
+            const scores = fontNames.map((name, i) => {
+                const font = fontDb[name] || {};
+
+                // Weighted dual-channel similarity
+                const moodSim = cosineSim(queryVec, fontMoodVecs[i]);
+                const kwSim = cosineSim(queryVec, fontKwVecs[i]);
+                let score = 0.6 * moodSim + 0.4 * kwSim;
+
+                // Keyword exact-match boost
+                const fontKw = (font.keywords || []).map(k => k.toLowerCase());
+                let kwBoost = 0;
+                for (const qt of queryTokens) {
+                    if (fontKw.includes(qt)) kwBoost += 0.08;
+                    else if (fontKw.some(k => k.includes(qt) || qt.includes(k))) kwBoost += 0.04;
+                }
+                score += Math.min(kwBoost, 0.3); // cap boost
+
+                return { name, score, moodSim, kwSim, index: i };
+            });
+            scores.sort((a, b) => b.score - a.score);
+
+            // Normalize scores relative to top result for better spread
+            const topScore = scores[0]?.score || 1;
+            const minScore = scores[Math.min(49, scores.length - 1)]?.score || 0;
+            const range = topScore - minScore || 1;
+            for (const s of scores) {
+                s.normalizedScore = (s.score - minScore) / range;
+            }
+
+            currentResults = scores.slice(0, 50);
+
+            renderResults(query);
+            setStatus(`Found ${currentResults.length} results for "${query}"`);
+
+            // Build score map for heatmap (use normalized scores for better visual spread)
+            searchScores = {};
+            for (const r of scores) searchScores[r.index] = r.normalizedScore;
+
+            // Highlight results on map + network
+            const topIndices = currentResults.slice(0, 20).map(r => r.index);
+            highlightOnMap(topIndices);
+            highlightOnNet(topIndices);
+
+            // Auto-switch to heatmap coloring
+            if (netColorMode !== "heatmap") {
+                netColorMode = "heatmap";
+                document.querySelectorAll("[data-color]").forEach(o => o.classList.toggle("active", o.dataset.color === "heatmap"));
+                updateNetLegend();
+            }
+        } catch (e) {
+            setStatus("Error: " + e.message);
+            if (e.message.includes("API key")) {
+                document.getElementById("results").innerHTML =
+                    `<div class="no-key-warning">
+                        <p>OpenAI API key not set.</p>
+                        <p style="margin-top:8px">Edit <code>font-search.html</code> and set your key at line 11:</p>
+                        <p style="margin-top:8px"><code>const OPENAI_API_KEY = "sk-...";</code></p>
+                    </div>`;
+            }
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Search";
+        }
+    }
+
+    document.getElementById("search-btn").onclick = doSearch;
+    document.getElementById("query").onkeydown = (e) => {
+        if (e.key === "Enter") doSearch();
+    };
+
+    function renderResults(query) {
+        const header = document.getElementById("results-header");
+        const container = document.getElementById("results");
+        header.textContent = `Top ${currentResults.length} results for "${query}"`;
+        container.innerHTML = "";
+
+        for (let i = 0; i < currentResults.length; i++) {
+            const r = currentResults[i];
+            const font = fontDb[r.name] || {};
+            const mood = font.mood || "";
+            const keywords = font.keywords || [];
+            const cat = font.category || "";
+            const pct = Math.round(r.normalizedScore * 100);
+
+            const card = document.createElement("div");
+            card.className = "result-card";
+            card.innerHTML = `
+                <div class="result-rank">${i + 1}</div>
+                <div class="result-preview" data-font="${esc(r.name)}"></div>
+                <div class="result-info">
+                    <div class="result-name">${esc(r.name)}${cat ? `<span class="result-cat">${esc(cat)}</span>` : ""}</div>
+                    ${mood ? `<div class="result-mood">${esc(mood)}</div>` : ""}
+                    ${keywords.length ? `<div class="result-keywords">${keywords.slice(0, 8).map(k => `<span class="result-kw">${esc(k)}</span>`).join("")}</div>` : ""}
+                </div>
+                <div class="result-score">${pct}%<span>match</span></div>
+            `;
+            container.appendChild(card);
+
+            // Load SVG preview
+            const compressed = font.preview?.svg_compressed;
+            if (compressed) {
+                const previewEl = card.querySelector(".result-preview");
+                decompress(compressed).then(svg => {
+                    if (svg) previewEl.innerHTML = svg;
+                });
+            }
+        }
+    }
+
+    function esc(s) {
+        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    async function decompress(compressed) {
+        try {
+            const bytes = Uint8Array.from(atob(compressed), c => c.charCodeAt(0));
+            const ds = new DecompressionStream("gzip");
+            const w = ds.writable.getWriter();
+            w.write(bytes);
+            w.close();
+            const r = ds.readable.getReader();
+            const chunks = [];
+            while (true) {
+                const { done, value } = await r.read();
+                if (done) break;
+                chunks.push(value);
+            }
+            return await new Blob(chunks).text();
+        } catch { return null; }
+    }
+
+    function showGraphTooltip(tooltipId, dotIndex, mx, my, maxW) {
+        const tooltip = document.getElementById(tooltipId);
+        const font = fontDb[fontNames[dotIndex]] || {};
+        tooltip.querySelector(".tt-name").textContent = fontNames[dotIndex];
+        tooltip.querySelector(".tt-mood").textContent = (font.mood || "").slice(0, 150) + ((font.mood || "").length > 150 ? "..." : "");
+        tooltip.querySelector(".tt-cat").textContent = font.category || "";
+        // Preview
+        const previewEl = tooltip.querySelector(".tt-preview");
+        previewEl.innerHTML = "";
+        const compressed = font.preview?.svg_compressed;
+        if (compressed) {
+            decompress(compressed).then(svg => { if (svg) previewEl.innerHTML = svg; });
+        }
+        tooltip.style.display = "block";
+        tooltip.style.left = Math.min(mx + 16, maxW - 310) + "px";
+        tooltip.style.top = Math.min(my + 16, 600) + "px";
+    }
+
+    function hideGraphTooltip(tooltipId) {
+        document.getElementById(tooltipId).style.display = "none";
+    }
+
+    function getNodeColor(index) {
+        const font = fontDb[fontNames[index]] || {};
+        if (netColorMode === "heatmap" && searchScores) {
+            const score = searchScores[index] || 0;
+            return scoreToHeatColor(score);
+        }
+        if (netColorMode === "thickness") {
+            const t = font.perceived_thickness || "regular";
+            return THICKNESS_COLORS[t] || THICKNESS_COLORS["regular"];
+        }
+        const cat = font.category || "sans-serif";
+        return CAT_COLORS[cat] || CAT_COLORS["sans-serif"];
+    }
+
+    function getNodeAlpha(index) {
+        if (netColorMode === "heatmap" && searchScores) {
+            const score = searchScores[index] || 0;
+            // Map score range to alpha: low scores nearly invisible
+            return Math.max(0.08, Math.pow(score, 3));
+        }
+        return null; // use default
+    }
+
+    function scoreToHeatColor(score) {
+        // Blue (cold/low) -> Yellow -> Red (hot/high)
+        const t = Math.max(0, Math.min(1, score));
+        if (t < 0.5) {
+            const s = t * 2;
+            const r = Math.round(50 + s * 205);
+            const g = Math.round(50 + s * 205);
+            const b = Math.round(220 - s * 120);
+            return `rgb(${r},${g},${b})`;
+        } else {
+            const s = (t - 0.5) * 2;
+            const r = Math.round(255);
+            const g = Math.round(255 - s * 200);
+            const b = Math.round(100 - s * 100);
+            return `rgb(${r},${g},${b})`;
+        }
+    }
+
+    // ── Map ──
+    let canvas, ctx;
+    let mapW = 0, mapH = 0;
+    let camX = 0, camY = 0, camZoom = 1;
+    let isDragging = false, dragStartX = 0, dragStartY = 0;
+    let dragDotIndex = -1, dragDotOffX = 0, dragDotOffY = 0;
+    let hoveredDot = -1;
+    let highlightedDots = new Set();
+    const DOT_RADIUS = 4;
+    const DOT_RADIUS_HOVER = 7;
+
+    function initMap() {
+        canvas = document.getElementById("map-canvas");
+        ctx = canvas.getContext("2d");
+        resizeMap();
+
+        // Build legend
+        const legend = document.getElementById("map-legend");
+        legend.innerHTML = "";
+        for (const [cat, color] of Object.entries(CAT_COLORS)) {
+            legend.innerHTML += `<div class="map-legend-item"><div class="legend-dot" style="background:${color}"></div>${CAT_LABELS[cat] || cat}</div>`;
+        }
+
+        // Events
+        canvas.addEventListener("mousedown", onMapMouseDown);
+        canvas.addEventListener("mousemove", onMapMouseMove);
+        canvas.addEventListener("mouseup", onMapMouseUp);
+        canvas.addEventListener("mouseleave", onMapMouseLeave);
+        canvas.addEventListener("wheel", onMapWheel, { passive: false });
+        document.getElementById("zoom-in").onclick = () => { camZoom *= 1.3; drawMap(); };
+        document.getElementById("zoom-out").onclick = () => { camZoom /= 1.3; drawMap(); };
+        document.getElementById("zoom-reset").onclick = () => {
+            camX = 0; camY = 0; camZoom = 1;
+            fontPositions.forEach(p => { p.x = p.ox; p.y = p.oy; });
+            drawMap();
+        };
+
+        // Center view
+        camZoom = 1;
+        camX = 0;
+        camY = 0;
+        drawMap();
+    }
+
+    function resizeMap() {
+        if (!canvas) return;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        mapW = rect.width;
+        mapH = rect.height;
+        canvas.width = mapW * devicePixelRatio;
+        canvas.height = mapH * devicePixelRatio;
+        canvas.style.width = mapW + "px";
+        canvas.style.height = mapH + "px";
+        ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+        drawMap();
+    }
+
+    function worldToScreen(wx, wy) {
+        const margin = 60;
+        const scale = Math.min(mapW, mapH) - margin * 2;
+        const sx = margin + wx * scale;
+        const sy = margin + wy * scale;
+        // Apply camera
+        return {
+            x: (sx - mapW / 2) * camZoom + mapW / 2 + camX,
+            y: (sy - mapH / 2) * camZoom + mapH / 2 + camY
+        };
+    }
+
+    function screenToWorld(sx, sy) {
+        const margin = 60;
+        const scale = Math.min(mapW, mapH) - margin * 2;
+        const cx = (sx - mapW / 2 - camX) / camZoom + mapW / 2;
+        const cy = (sy - mapH / 2 - camY) / camZoom + mapH / 2;
+        return {
+            x: (cx - margin) / scale,
+            y: (cy - margin) / scale
+        };
+    }
+
+    function drawMap() {
+        if (!ctx || !fontPositions.length) return;
+        ctx.clearRect(0, 0, mapW, mapH);
+
+        const r = DOT_RADIUS * camZoom;
+        const rH = DOT_RADIUS_HOVER * camZoom;
+
+        for (let i = 0; i < fontPositions.length; i++) {
+            const p = fontPositions[i];
+            const s = worldToScreen(p.x, p.y);
+            if (s.x < -20 || s.x > mapW + 20 || s.y < -20 || s.y > mapH + 20) continue;
+
+            const cat = fontDb[fontNames[i]]?.category || "sans-serif";
+            const color = CAT_COLORS[cat] || CAT_COLORS["sans-serif"];
+            const isHovered = i === hoveredDot;
+            const isHighlighted = highlightedDots.has(i);
+
+            ctx.beginPath();
+            const dotR = isHovered ? Math.max(rH, 6) : isHighlighted ? Math.max(r * 1.5, 5) : Math.max(r, 2.5);
+            ctx.arc(s.x, s.y, dotR, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.globalAlpha = isHighlighted ? 1 : isHovered ? 1 : highlightedDots.size > 0 ? 0.15 : 0.7;
+            ctx.fill();
+
+            if (isHighlighted && !isHovered) {
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.globalAlpha = 1;
+                ctx.stroke();
+            }
+        }
+        ctx.globalAlpha = 1;
+
+        // Draw labels for highlighted dots
+        if (highlightedDots.size > 0 && highlightedDots.size <= 20) {
+            ctx.font = "11px -apple-system, BlinkMacSystemFont, sans-serif";
+            ctx.textAlign = "left";
+            for (const i of highlightedDots) {
+                const p = fontPositions[i];
+                const s = worldToScreen(p.x, p.y);
+                if (s.x < -20 || s.x > mapW + 20) continue;
+                const dotR = Math.max(DOT_RADIUS * camZoom * 1.5, 5);
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--text").trim();
+                ctx.fillText(fontNames[i], s.x + dotR + 4, s.y + 4);
+            }
+        }
+    }
+
+    function findDotAt(mx, my) {
+        const hitR = Math.max(DOT_RADIUS * camZoom * 2, 8);
+        let closest = -1, closestDist = Infinity;
+        for (let i = 0; i < fontPositions.length; i++) {
+            const s = worldToScreen(fontPositions[i].x, fontPositions[i].y);
+            const dx = s.x - mx, dy = s.y - my;
+            const dist = dx * dx + dy * dy;
+            if (dist < hitR * hitR && dist < closestDist) {
+                closest = i;
+                closestDist = dist;
+            }
+        }
+        return closest;
+    }
+
+    function onMapMouseDown(e) {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+        const dot = findDotAt(mx, my);
+
+        if (dot >= 0) {
+            // Start dragging dot
+            dragDotIndex = dot;
+            const s = worldToScreen(fontPositions[dot].x, fontPositions[dot].y);
+            dragDotOffX = s.x - mx;
+            dragDotOffY = s.y - my;
+            canvas.classList.add("dragging-dot");
+        } else {
+            // Start panning
+            isDragging = true;
+            dragStartX = mx - camX;
+            dragStartY = my - camY;
+            canvas.classList.add("grabbing");
+        }
+    }
+
+    function onMapMouseMove(e) {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+
+        if (dragDotIndex >= 0) {
+            // Dragging a dot
+            const w = screenToWorld(mx + dragDotOffX, my + dragDotOffY);
+            fontPositions[dragDotIndex].x = w.x;
+            fontPositions[dragDotIndex].y = w.y;
+            drawMap();
+            return;
+        }
+
+        if (isDragging) {
+            camX = mx - dragStartX;
+            camY = my - dragStartY;
+            drawMap();
+            return;
+        }
+
+        // Hover detection
+        const dot = findDotAt(mx, my);
+        if (dot !== hoveredDot) {
+            hoveredDot = dot;
+            drawMap();
+            const tooltip = document.getElementById("map-tooltip");
+            if (dot >= 0) {
+                showGraphTooltip("map-tooltip", dot, mx, my, mapW);
+            } else {
+                hideGraphTooltip("map-tooltip");
+            }
+        }
+    }
+
+    function onMapMouseUp() {
+        isDragging = false;
+        dragDotIndex = -1;
+        canvas.classList.remove("grabbing", "dragging-dot");
+    }
+
+    function onMapMouseLeave() {
+        isDragging = false;
+        dragDotIndex = -1;
+        hoveredDot = -1;
+        canvas.classList.remove("grabbing", "dragging-dot");
+        document.getElementById("map-tooltip").style.display = "none";
+        drawMap();
+    }
+
+    function onMapWheel(e) {
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+
+        const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+        const newZoom = camZoom * factor;
+        // Zoom toward mouse position
+        camX = mx - (mx - camX) * (newZoom / camZoom);
+        camY = my - (my - camY) * (newZoom / camZoom);
+        camZoom = newZoom;
+        drawMap();
+    }
+
+    function highlightOnMap(indices) {
+        highlightedDots = new Set(indices);
+        drawMap();
+    }
+
+    function highlightOnNet(indices) {
+        netHighlighted = new Set(indices);
+        if (indices.length && netNodes.length) {
+            // Auto-frame: find bounding box of highlighted nodes
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            for (const i of indices) {
+                if (!netNodes[i]) continue;
+                minX = Math.min(minX, netNodes[i].x);
+                minY = Math.min(minY, netNodes[i].y);
+                maxX = Math.max(maxX, netNodes[i].x);
+                maxY = Math.max(maxY, netNodes[i].y);
+            }
+            // Add padding
+            const pad = 100;
+            minX -= pad; minY -= pad; maxX += pad; maxY += pad;
+            const bw = maxX - minX, bh = maxY - minY;
+            const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+
+            // Compute zoom to fit
+            const targetZoom = Math.min(netW / bw, netH / bh, 3);
+
+            // Animate camera to target
+            const startCamX = netCamX, startCamY = netCamY, startZoom = netCamZoom;
+            const targetCamX = netW / 2 - cx * targetZoom;
+            const targetCamY = netH / 2 - cy * targetZoom;
+            let frame = 0;
+            const totalFrames = 40;
+
+            function animateFrame() {
+                frame++;
+                const t = frame / totalFrames;
+                const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+                netCamX = startCamX + (targetCamX - startCamX) * ease;
+                netCamY = startCamY + (targetCamY - startCamY) * ease;
+                netCamZoom = startZoom + (targetZoom - startZoom) * ease;
+                drawNet();
+                if (frame < totalFrames) requestAnimationFrame(animateFrame);
+            }
+            requestAnimationFrame(animateFrame);
+        } else {
+            drawNet();
+        }
+    }
+
+    // ── Force-Directed Network Graph ──
+    let netCanvas, netCtx;
+    let netW = 0, netH = 0;
+    let netCamX = 0, netCamY = 0, netCamZoom = 1;
+    let netIsDragging = false, netDragStartX = 0, netDragStartY = 0;
+    let netDragDot = -1, netDragOffX = 0, netDragOffY = 0;
+    let netHovered = -1;
+    let netNodes = [];    // {x, y, vx, vy}
+    let netEdges = [];    // {a, b, weight}
+    let netAnimId = null;
+    let netSimulating = true;
+    const NET_K_NEIGHBORS = 5;   // edges per node
+    const NET_SIM_STEPS = 300;
+    let netSimStep = 0;
+
+    function buildNetwork(keepPositions) {
+        // Create or keep node positions
+        if (!keepPositions || !netNodes.length) {
+            netNodes = fontPositions.map(p => ({
+                x: (p.ox - 0.5) * 800 + netW / 2,
+                y: (p.oy - 0.5) * 800 + netH / 2,
+                vx: 0, vy: 0
+            }));
+        } else {
+            // Keep positions, just reset velocity
+            for (const n of netNodes) { n.vx = 0; n.vy = 0; }
+        }
+
+        setStatus(`Building ${netClusterMode} edges...`);
+        netEdges = [];
+        const edgeSet = new Set();
+
+        if (netClusterMode === "category") {
+            // Connect fonts in same category
+            for (let i = 0; i < fontNames.length; i++) {
+                const catI = fontDb[fontNames[i]]?.category;
+                const sims = [];
+                for (let j = 0; j < fontNames.length; j++) {
+                    if (i === j) continue;
+                    if (fontDb[fontNames[j]]?.category !== catI) continue;
+                    sims.push({ j, sim: cosineSim(fontVecs[i], fontVecs[j]) });
+                }
+                sims.sort((a, b) => b.sim - a.sim);
+                for (let k = 0; k < NET_K_NEIGHBORS && k < sims.length; k++) {
+                    const key = Math.min(i, sims[k].j) + ":" + Math.max(i, sims[k].j);
+                    if (!edgeSet.has(key)) {
+                        edgeSet.add(key);
+                        netEdges.push({ a: i, b: sims[k].j, weight: sims[k].sim });
+                    }
+                }
+            }
+        } else if (netClusterMode === "thickness") {
+            // Connect fonts with same/adjacent thickness
+            const THICK_ORDER = ["thin","extra-light","light","regular","medium","semi-bold","bold","extra-bold","black","extra-black"];
+            for (let i = 0; i < fontNames.length; i++) {
+                const tI = fontDb[fontNames[i]]?.perceived_thickness || "regular";
+                const tIdx = THICK_ORDER.indexOf(tI);
+                const sims = [];
+                for (let j = 0; j < fontNames.length; j++) {
+                    if (i === j) continue;
+                    const tJ = fontDb[fontNames[j]]?.perceived_thickness || "regular";
+                    const tJIdx = THICK_ORDER.indexOf(tJ);
+                    if (Math.abs(tIdx - tJIdx) > 1) continue;
+                    sims.push({ j, sim: cosineSim(fontVecs[i], fontVecs[j]) });
+                }
+                sims.sort((a, b) => b.sim - a.sim);
+                for (let k = 0; k < NET_K_NEIGHBORS && k < sims.length; k++) {
+                    const key = Math.min(i, sims[k].j) + ":" + Math.max(i, sims[k].j);
+                    if (!edgeSet.has(key)) {
+                        edgeSet.add(key);
+                        netEdges.push({ a: i, b: sims[k].j, weight: sims[k].sim });
+                    }
+                }
+            }
+        } else if (netClusterMode === "keywords") {
+            // Connect fonts sharing keywords
+            for (let i = 0; i < fontNames.length; i++) {
+                const kwI = new Set(fontDb[fontNames[i]]?.keywords || []);
+                if (!kwI.size) continue;
+                const sims = [];
+                for (let j = 0; j < fontNames.length; j++) {
+                    if (i === j) continue;
+                    const kwJ = fontDb[fontNames[j]]?.keywords || [];
+                    const shared = kwJ.filter(k => kwI.has(k)).length;
+                    if (shared < 2) continue;
+                    sims.push({ j, sim: shared / Math.max(kwI.size, kwJ.length) });
+                }
+                sims.sort((a, b) => b.sim - a.sim);
+                for (let k = 0; k < NET_K_NEIGHBORS && k < sims.length; k++) {
+                    const key = Math.min(i, sims[k].j) + ":" + Math.max(i, sims[k].j);
+                    if (!edgeSet.has(key)) {
+                        edgeSet.add(key);
+                        netEdges.push({ a: i, b: sims[k].j, weight: sims[k].sim });
+                    }
+                }
+            }
+        } else if (netClusterMode === "mood") {
+            // Mood-only similarity
+            for (let i = 0; i < fontMoodVecs.length; i++) {
+                const sims = [];
+                for (let j = 0; j < fontMoodVecs.length; j++) {
+                    if (i === j) continue;
+                    sims.push({ j, sim: cosineSim(fontMoodVecs[i], fontMoodVecs[j]) });
+                }
+                sims.sort((a, b) => b.sim - a.sim);
+                for (let k = 0; k < NET_K_NEIGHBORS && k < sims.length; k++) {
+                    const key = Math.min(i, sims[k].j) + ":" + Math.max(i, sims[k].j);
+                    if (!edgeSet.has(key)) {
+                        edgeSet.add(key);
+                        netEdges.push({ a: i, b: sims[k].j, weight: sims[k].sim });
+                    }
+                }
+            }
+        } else if (netClusterMode === "kw_embedding") {
+            // Keywords-only embedding similarity
+            for (let i = 0; i < fontKwVecs.length; i++) {
+                const sims = [];
+                for (let j = 0; j < fontKwVecs.length; j++) {
+                    if (i === j) continue;
+                    sims.push({ j, sim: cosineSim(fontKwVecs[i], fontKwVecs[j]) });
+                }
+                sims.sort((a, b) => b.sim - a.sim);
+                for (let k = 0; k < NET_K_NEIGHBORS && k < sims.length; k++) {
+                    const key = Math.min(i, sims[k].j) + ":" + Math.max(i, sims[k].j);
+                    if (!edgeSet.has(key)) {
+                        edgeSet.add(key);
+                        netEdges.push({ a: i, b: sims[k].j, weight: sims[k].sim });
+                    }
+                }
+            }
+        } else {
+            // Default: combined similarity
+            for (let i = 0; i < fontVecs.length; i++) {
+                const sims = [];
+                for (let j = 0; j < fontVecs.length; j++) {
+                    if (i === j) continue;
+                    sims.push({ j, sim: cosineSim(fontVecs[i], fontVecs[j]) });
+                }
+                sims.sort((a, b) => b.sim - a.sim);
+                for (let k = 0; k < NET_K_NEIGHBORS && k < sims.length; k++) {
+                    const key = Math.min(i, sims[k].j) + ":" + Math.max(i, sims[k].j);
+                    if (!edgeSet.has(key)) {
+                        edgeSet.add(key);
+                        netEdges.push({ a: i, b: sims[k].j, weight: sims[k].sim });
+                    }
+                }
+            }
+        }
+        setStatus(`Network: ${netNodes.length} nodes, ${netEdges.length} edges. Simulating...`);
+    }
+
+    function netSimulate() {
+        if (!netSimulating || netSimStep >= NET_SIM_STEPS) {
+            netSimulating = false;
+            setStatus(`Network: ${netNodes.length} nodes, ${netEdges.length} edges. Done.`);
+            drawNet();
+            return;
+        }
+
+        const alpha = 1 - netSimStep / NET_SIM_STEPS;
+        const repulsion = 500 * alpha;
+        const attraction = 0.01 * alpha;
+        const damping = 0.85;
+        const idealLen = 80;
+
+        // Repulsion (only nearby nodes for performance)
+        // Use grid-based approximation
+        for (let i = 0; i < netNodes.length; i++) {
+            netNodes[i].vx *= damping;
+            netNodes[i].vy *= damping;
+        }
+
+        // Repulsion: sample-based for performance (full O(n^2) is too slow for 2400 nodes)
+        const sampleSize = Math.min(50, netNodes.length);
+        for (let i = 0; i < netNodes.length; i++) {
+            for (let s = 0; s < sampleSize; s++) {
+                const j = Math.floor(Math.random() * netNodes.length);
+                if (i === j) continue;
+                const dx = netNodes[i].x - netNodes[j].x;
+                const dy = netNodes[i].y - netNodes[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy) + 1;
+                const force = repulsion / (dist * dist) * (netNodes.length / sampleSize);
+                netNodes[i].vx += (dx / dist) * force;
+                netNodes[i].vy += (dy / dist) * force;
+            }
+        }
+
+        // Attraction along edges
+        for (const e of netEdges) {
+            const a = netNodes[e.a], b = netNodes[e.b];
+            const dx = b.x - a.x, dy = b.y - a.y;
+            const dist = Math.sqrt(dx * dx + dy * dy) + 1;
+            const force = (dist - idealLen) * attraction * e.weight;
+            const fx = (dx / dist) * force;
+            const fy = (dy / dist) * force;
+            a.vx += fx; a.vy += fy;
+            b.vx -= fx; b.vy -= fy;
+        }
+
+        // Center gravity
+        let cx = 0, cy = 0;
+        for (const n of netNodes) { cx += n.x; cy += n.y; }
+        cx /= netNodes.length; cy /= netNodes.length;
+        for (const n of netNodes) {
+            n.vx += (netW / 2 - cx) * 0.001;
+            n.vy += (netH / 2 - cy) * 0.001;
+        }
+
+        // Apply velocities
+        for (let i = 0; i < netNodes.length; i++) {
+            if (i === netDragDot) continue; // don't move dragged node
+            netNodes[i].x += netNodes[i].vx;
+            netNodes[i].y += netNodes[i].vy;
+        }
+
+        netSimStep++;
+        drawNet();
+        netAnimId = requestAnimationFrame(netSimulate);
+    }
+
+    function netWorldToScreen(wx, wy) {
+        return {
+            x: (wx - netW / 2) * netCamZoom + netW / 2 + netCamX,
+            y: (wy - netH / 2) * netCamZoom + netH / 2 + netCamY
+        };
+    }
+
+    function netScreenToWorld(sx, sy) {
+        return {
+            x: (sx - netW / 2 - netCamX) / netCamZoom + netW / 2,
+            y: (sy - netH / 2 - netCamY) / netCamZoom + netH / 2
+        };
+    }
+
+    function drawNet() {
+        if (!netCtx || !netNodes.length) return;
+        netCtx.clearRect(0, 0, netW, netH);
+
+        // Draw edges
+        netCtx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--border").trim();
+        netCtx.lineWidth = 0.5;
+        netCtx.globalAlpha = 0.3;
+        for (const e of netEdges) {
+            const a = netWorldToScreen(netNodes[e.a].x, netNodes[e.a].y);
+            const b = netWorldToScreen(netNodes[e.b].x, netNodes[e.b].y);
+            // Cull off-screen edges
+            if ((a.x < -50 && b.x < -50) || (a.x > netW + 50 && b.x > netW + 50)) continue;
+            if ((a.y < -50 && b.y < -50) || (a.y > netH + 50 && b.y > netH + 50)) continue;
+            netCtx.beginPath();
+            netCtx.moveTo(a.x, a.y);
+            netCtx.lineTo(b.x, b.y);
+            netCtx.stroke();
+        }
+        netCtx.globalAlpha = 1;
+
+        // Draw nodes
+        const r = Math.max(3 * netCamZoom, 2);
+        const rH = Math.max(6 * netCamZoom, 5);
+        for (let i = 0; i < netNodes.length; i++) {
+            const s = netWorldToScreen(netNodes[i].x, netNodes[i].y);
+            if (s.x < -20 || s.x > netW + 20 || s.y < -20 || s.y > netH + 20) continue;
+
+            const color = getNodeColor(i);
+            const isHovered = i === netHovered;
+            const isHighlighted = netHighlighted.has(i);
+            const alphaOverride = getNodeAlpha(i);
+
+            let dotR = r;
+            if (isHovered) dotR = rH;
+            else if (isHighlighted) dotR = Math.max(r * 1.6, 5);
+
+            netCtx.beginPath();
+            netCtx.arc(s.x, s.y, dotR, 0, Math.PI * 2);
+            netCtx.fillStyle = color;
+            if (alphaOverride !== null) {
+                netCtx.globalAlpha = isHovered ? 1 : alphaOverride;
+            } else {
+                netCtx.globalAlpha = isHighlighted ? 1 : isHovered ? 1 : netHighlighted.size > 0 ? 0.15 : 0.7;
+            }
+            netCtx.fill();
+
+            if (isHighlighted && !isHovered && netColorMode !== "heatmap") {
+                netCtx.strokeStyle = color;
+                netCtx.lineWidth = 2;
+                netCtx.globalAlpha = 1;
+                netCtx.stroke();
+            }
+        }
+        netCtx.globalAlpha = 1;
+
+        // Draw label for hovered node
+        if (netHovered >= 0) {
+            const s = netWorldToScreen(netNodes[netHovered].x, netNodes[netHovered].y);
+            netCtx.font = "12px -apple-system, BlinkMacSystemFont, sans-serif";
+            netCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--text").trim();
+            netCtx.textAlign = "left";
+            netCtx.fillText(fontNames[netHovered], s.x + rH + 4, s.y + 4);
+
+            // Also highlight connected edges
+            netCtx.strokeStyle = CAT_COLORS[fontDb[fontNames[netHovered]]?.category] || CAT_COLORS["sans-serif"];
+            netCtx.lineWidth = 1.5;
+            netCtx.globalAlpha = 0.6;
+            for (const e of netEdges) {
+                if (e.a !== netHovered && e.b !== netHovered) continue;
+                const a = netWorldToScreen(netNodes[e.a].x, netNodes[e.a].y);
+                const b = netWorldToScreen(netNodes[e.b].x, netNodes[e.b].y);
+                netCtx.beginPath();
+                netCtx.moveTo(a.x, a.y);
+                netCtx.lineTo(b.x, b.y);
+                netCtx.stroke();
+            }
+            netCtx.globalAlpha = 1;
+        }
+    }
+
+    function netFindDotAt(mx, my) {
+        const hitR = Math.max(4 * netCamZoom * 2, 8);
+        let closest = -1, closestDist = Infinity;
+        for (let i = 0; i < netNodes.length; i++) {
+            const s = netWorldToScreen(netNodes[i].x, netNodes[i].y);
+            const dx = s.x - mx, dy = s.y - my;
+            const dist = dx * dx + dy * dy;
+            if (dist < hitR * hitR && dist < closestDist) {
+                closest = i;
+                closestDist = dist;
+            }
+        }
+        return closest;
+    }
+
+    function initNetwork() {
+        netCanvas = document.getElementById("net-canvas");
+        netCtx = netCanvas.getContext("2d");
+        resizeNet();
+
+        // Legend + build
+        updateNetLegend();
+        buildNetwork();
+
+        // Events
+        netCanvas.addEventListener("mousedown", (e) => {
+            const rect = netCanvas.getBoundingClientRect();
+            const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+            const dot = netFindDotAt(mx, my);
+            if (dot >= 0) {
+                netDragDot = dot;
+                const s = netWorldToScreen(netNodes[dot].x, netNodes[dot].y);
+                netDragOffX = s.x - mx;
+                netDragOffY = s.y - my;
+                netCanvas.classList.add("dragging-dot");
+            } else {
+                netIsDragging = true;
+                netDragStartX = mx - netCamX;
+                netDragStartY = my - netCamY;
+                netCanvas.classList.add("grabbing");
+            }
+        });
+
+        netCanvas.addEventListener("mousemove", (e) => {
+            const rect = netCanvas.getBoundingClientRect();
+            const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+
+            if (netDragDot >= 0) {
+                const w = netScreenToWorld(mx + netDragOffX, my + netDragOffY);
+                netNodes[netDragDot].x = w.x;
+                netNodes[netDragDot].y = w.y;
+                netNodes[netDragDot].vx = 0;
+                netNodes[netDragDot].vy = 0;
+                if (!netSimulating) drawNet();
+                return;
+            }
+            if (netIsDragging) {
+                netCamX = mx - netDragStartX;
+                netCamY = my - netDragStartY;
+                drawNet();
+                return;
+            }
+
+            const dot = netFindDotAt(mx, my);
+            if (dot !== netHovered) {
+                netHovered = dot;
+                drawNet();
+                const tooltip = document.getElementById("net-tooltip");
+                if (dot >= 0) {
+                    showGraphTooltip("net-tooltip", dot, mx, my, netW);
+                } else {
+                    hideGraphTooltip("net-tooltip");
+                }
+            }
+        });
+
+        netCanvas.addEventListener("mouseup", () => {
+            netIsDragging = false;
+            netDragDot = -1;
+            netCanvas.classList.remove("grabbing", "dragging-dot");
+        });
+
+        netCanvas.addEventListener("mouseleave", () => {
+            netIsDragging = false;
+            netDragDot = -1;
+            netHovered = -1;
+            netCanvas.classList.remove("grabbing", "dragging-dot");
+            document.getElementById("net-tooltip").style.display = "none";
+            drawNet();
+        });
+
+        netCanvas.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            const rect = netCanvas.getBoundingClientRect();
+            const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+            const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+            const newZoom = netCamZoom * factor;
+            netCamX = mx - (mx - netCamX) * (newZoom / netCamZoom);
+            netCamY = my - (my - netCamY) * (newZoom / netCamZoom);
+            netCamZoom = newZoom;
+            drawNet();
+        }, { passive: false });
+
+        document.getElementById("net-zoom-in").onclick = () => { netCamZoom *= 1.3; drawNet(); };
+        document.getElementById("net-zoom-out").onclick = () => { netCamZoom /= 1.3; drawNet(); };
+        document.getElementById("net-zoom-reset").onclick = () => {
+            netCamX = 0; netCamY = 0; netCamZoom = 1;
+            drawNet();
+        };
+
+        // Panel: cluster mode
+        document.querySelectorAll("[data-cluster]").forEach(opt => {
+            opt.onclick = () => {
+                if (opt.dataset.cluster === netClusterMode) return;
+                netClusterMode = opt.dataset.cluster;
+                document.querySelectorAll("[data-cluster]").forEach(o => o.classList.remove("active"));
+                opt.classList.add("active");
+                // Cancel current simulation
+                if (netAnimId) { cancelAnimationFrame(netAnimId); netAnimId = null; }
+                buildNetwork(true); // keep positions, rebuild edges
+                netSimStep = 0;
+                netSimulating = true;
+                netSimulate();
+            };
+        });
+
+        // Panel: color mode
+        document.querySelectorAll("[data-color]").forEach(opt => {
+            opt.onclick = () => {
+                if (opt.dataset.color === netColorMode) return;
+                netColorMode = opt.dataset.color;
+                document.querySelectorAll("[data-color]").forEach(o => o.classList.remove("active"));
+                opt.classList.add("active");
+                updateNetLegend();
+                drawNet();
+            };
+        });
+
+        // Start simulation
+        netSimStep = 0;
+        netSimulating = true;
+        netSimulate();
+    }
+
+    function updateNetLegend() {
+        const legend = document.getElementById("net-legend");
+        legend.innerHTML = "";
+        if (netColorMode === "heatmap") {
+            legend.innerHTML = `
+                <div class="map-legend-item"><div class="legend-dot" style="background:${scoreToHeatColor(1)}"></div>High match</div>
+                <div class="map-legend-item"><div class="legend-dot" style="background:${scoreToHeatColor(0.7)}"></div>Medium</div>
+                <div class="map-legend-item"><div class="legend-dot" style="background:${scoreToHeatColor(0.4)}"></div>Low match</div>
+            `;
+            return;
+        }
+        const colors = netColorMode === "thickness" ? THICKNESS_COLORS : CAT_COLORS;
+        const labels = netColorMode === "thickness" ? THICKNESS_LABELS : CAT_LABELS;
+        for (const [key, color] of Object.entries(colors)) {
+            legend.innerHTML += `<div class="map-legend-item"><div class="legend-dot" style="background:${color}"></div>${labels[key] || key}</div>`;
+        }
+    }
+
+    function resizeNet() {
+        if (!netCanvas) return;
+        const rect = netCanvas.parentElement.getBoundingClientRect();
+        netW = rect.width - 220; // account for side panel
+        netH = rect.height;
+        netCanvas.width = netW * devicePixelRatio;
+        netCanvas.height = netH * devicePixelRatio;
+        netCanvas.style.width = netW + "px";
+        netCanvas.style.height = netH + "px";
+        netCtx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+        drawNet();
+    }
+    window.addEventListener("resize", () => { resizeMap(); resizeNet(); });
+
+    // ── Boot ──
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", loadData);
+    } else {
+        loadData();
+    }
+    </script>
+</body>
+</html>

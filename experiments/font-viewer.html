@@ -1,0 +1,1684 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Font Library</title>
+        <style>
+            :root {
+                --bg: #fafafa;
+                --surface: #fff;
+                --border: #e5e5e5;
+                --text: #1a1a1a;
+                --text-secondary: #888;
+                --accent: #1a1a1a;
+                --accent-soft: #f0f0f0;
+                --radius: 10px;
+                --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+                --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.08);
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --bg: #111;
+                    --surface: #1a1a1a;
+                    --border: #2a2a2a;
+                    --text: #f0f0f0;
+                    --text-secondary: #777;
+                    --accent: #fff;
+                    --accent-soft: #222;
+                    --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+                    --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.4);
+                }
+            }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            /* ── Scrollbars ── */
+            * {
+                scrollbar-width: thin;
+                scrollbar-color: var(--border) transparent;
+            }
+            ::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: var(--border);
+                border-radius: 3px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--text-secondary);
+            }
+            .modal::-webkit-scrollbar {
+                width: 5px;
+            }
+            .modal::-webkit-scrollbar-track {
+                background: transparent;
+                margin: 16px 0;
+            }
+            .modal::-webkit-scrollbar-thumb {
+                background: var(--border);
+                border-radius: 3px;
+            }
+            .modal::-webkit-scrollbar-thumb:hover {
+                background: var(--text-secondary);
+            }
+
+            body {
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI",
+                    sans-serif;
+                background: var(--bg);
+                color: var(--text);
+                line-height: 1.5;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            /* ── Header ── */
+            header {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background: var(--bg);
+                border-bottom: 1px solid var(--border);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+            }
+            .header-row {
+                padding: 12px 32px;
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+            .header-row + .header-row {
+                padding-top: 0;
+            }
+            .logo {
+                font-size: 18px;
+                font-weight: 700;
+                letter-spacing: -0.03em;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            .header-meta {
+                color: var(--text-secondary);
+                font-size: 12px;
+                line-height: 1;
+                white-space: nowrap;
+            }
+
+            /* ── Search ── */
+            .search-wrap {
+                flex: 1;
+                min-width: 120px;
+                position: relative;
+            }
+            .search-wrap svg {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--text-secondary);
+                pointer-events: none;
+            }
+            #search {
+                width: 100%;
+                padding: 8px 12px 8px 36px;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: var(--surface);
+                color: var(--text);
+                font-size: 14px;
+                outline: none;
+                transition: border-color 0.15s;
+            }
+            #search:focus {
+                border-color: var(--text-secondary);
+            }
+            #search::placeholder {
+                color: var(--text-secondary);
+            }
+
+            /* ── Filter bar ── */
+            .filter-bar {
+                padding-bottom: 12px !important;
+                padding-top: 0 !important;
+                flex-wrap: wrap !important;
+                gap: 6px 0 !important;
+            }
+            .filter-group {
+                display: flex;
+                gap: 2px;
+                align-items: center;
+                flex-shrink: 0;
+            }
+
+            /* ── Filter buttons (shared base) ── */
+            .fbtn, .fbtn-icon {
+                height: 26px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                background: var(--surface);
+                color: var(--text-secondary);
+                cursor: pointer;
+                transition: all 0.15s;
+                user-select: none;
+                white-space: nowrap;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            .fbtn {
+                padding: 0 10px;
+                font-size: 11px;
+            }
+            .fbtn-icon {
+                width: 26px;
+            }
+            .fbtn:hover, .fbtn-icon:hover {
+                border-color: var(--text-secondary);
+                color: var(--text);
+            }
+            .fbtn.active, .fbtn-icon.active {
+                background: var(--accent);
+                color: var(--bg);
+                border-color: var(--accent);
+            }
+
+            /* keep old .pill for compatibility */
+            .pill-group {
+                display: flex;
+                gap: 5px;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+            /* ── Thickness slider ── */
+            #weight-area {
+                gap: 4px;
+            }
+            #thickness-slider-wrap {
+                align-items: center;
+                gap: 8px;
+            }
+            #thickness-slider {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 180px;
+                height: 4px;
+                background: var(--border);
+                border-radius: 2px;
+                outline: none;
+                cursor: pointer;
+            }
+            #thickness-slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 14px;
+                height: 14px;
+                border-radius: 50%;
+                background: var(--accent);
+                cursor: pointer;
+                border: none;
+            }
+            #thickness-slider::-moz-range-thumb {
+                width: 14px;
+                height: 14px;
+                border-radius: 50%;
+                background: var(--accent);
+                cursor: pointer;
+                border: none;
+            }
+            #thickness-label {
+                min-width: 60px;
+                font-size: 11px !important;
+            }
+
+            .pill-label {
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.07em;
+                color: var(--text-secondary);
+                margin-right: 4px;
+                white-space: nowrap;
+            }
+            .pill {
+                padding: 4px 12px;
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                background: var(--surface);
+                color: var(--text-secondary);
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.15s;
+                white-space: nowrap;
+                user-select: none;
+            }
+            .pill:hover {
+                border-color: var(--text-secondary);
+                color: var(--text);
+            }
+            .pill.active {
+                background: var(--accent);
+                color: var(--bg);
+                border-color: var(--accent);
+            }
+
+            /* ── Controls ── */
+            .view-toggle {
+                display: flex;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            .view-btn {
+                padding: 5px 9px;
+                background: var(--surface);
+                border: none;
+                color: var(--text-secondary);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                transition: all 0.15s;
+            }
+            .view-btn:not(:last-child) {
+                border-right: 1px solid var(--border);
+            }
+            .view-btn.active {
+                background: var(--accent-soft);
+                color: var(--text);
+            }
+            .view-btn:hover {
+                color: var(--text);
+            }
+            #sort {
+                padding: 5px 9px;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: var(--surface);
+                color: var(--text);
+                font-size: 12px;
+                cursor: pointer;
+                outline: none;
+            }
+            .count {
+                font-size: 12px;
+                color: var(--text-secondary);
+                white-space: nowrap;
+                line-height: 1;
+                align-self: center;
+            }
+
+            /* ── Grid ── */
+            #grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                grid-auto-rows: 200px;
+                gap: 20px;
+                padding: 24px 32px 80px;
+            }
+            #grid.list-view {
+                grid-template-columns: 1fr;
+                grid-auto-rows: auto;
+                gap: 1px;
+            }
+
+            /* ── Card ── */
+            .card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                overflow: hidden;
+                transition:
+                    box-shadow 0.2s,
+                    transform 0.2s;
+                cursor: default;
+                display: flex;
+                flex-direction: column;
+            }
+            .card:hover {
+                box-shadow: var(--shadow-hover);
+                transform: translateY(-1px);
+            }
+            .card-preview {
+                padding: 20px 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex: 1;
+                min-height: 100px;
+                background: var(--bg);
+                position: relative;
+            }
+            .card-preview svg {
+                width: 100%;
+                max-height: 60px;
+                fill: var(--text);
+            }
+            .card-preview .fallback-label {
+                position: absolute;
+                bottom: 6px;
+                right: 10px;
+                font-size: 10px;
+                color: var(--text-secondary);
+                opacity: 0.6;
+            }
+            .card-info {
+                padding: 8px 14px;
+                border-top: 1px solid var(--border);
+            }
+            .card-name {
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: -0.01em;
+                margin-bottom: 3px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .card-meta {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .card-meta-left {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+            .card-meta-right {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin-left: auto;
+            }
+            .badge-variable {
+                font-size: 9px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                padding: 2px 6px;
+                border-radius: 4px;
+                background: var(--border);
+                color: var(--text-secondary);
+            }
+            .card-download {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 26px;
+                height: 26px;
+                border-radius: 6px;
+                border: 1px solid var(--border);
+                background: var(--bg);
+                color: var(--text-secondary);
+                cursor: pointer;
+                padding: 0;
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                opacity: 0;
+                transition: opacity 0.15s, background 0.15s, color 0.15s;
+                z-index: 2;
+            }
+            .card:hover .card-download {
+                opacity: 1;
+            }
+            .card-download:hover {
+                background: var(--accent-soft);
+                color: var(--text);
+            }
+            .badge {
+                font-size: 10px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                padding: 2px 7px;
+                border-radius: 4px;
+                background: var(--accent-soft);
+                color: var(--text-secondary);
+            }
+            .style-tags {
+                display: flex;
+                gap: 4px;
+                flex-wrap: wrap;
+            }
+            .style-tag {
+                font-size: 10px;
+                padding: 2px 6px;
+                border-radius: 3px;
+                border: 1px solid var(--border);
+                color: var(--text-secondary);
+            }
+            .weight-dots {
+                display: flex;
+                gap: 3px;
+                align-items: center;
+            }
+            .weight-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--border);
+                transition: background 0.15s;
+            }
+            .weight-dot.filled {
+                background: var(--text-secondary);
+            }
+            .weight-dot.current {
+                background: var(--accent);
+                outline: 2px solid var(--accent);
+                outline-offset: 1px;
+            }
+            .weight-label {
+                font-size: 10px;
+                color: var(--text-secondary);
+                margin-left: 3px;
+            }
+
+            /* ── List ── */
+            .list-view .card {
+                border-radius: 0;
+                flex-direction: row;
+                align-items: center;
+            }
+            .list-view .card:first-child {
+                border-radius: var(--radius) var(--radius) 0 0;
+            }
+            .list-view .card:last-child {
+                border-radius: 0 0 var(--radius) var(--radius);
+            }
+            .list-view .card:hover {
+                transform: none;
+            }
+            .list-view .card-preview {
+                width: 260px;
+                min-height: 0;
+                flex: 0 0 auto;
+                padding: 10px 20px;
+                flex-shrink: 0;
+            }
+            .list-view .card-preview svg {
+                max-height: 44px;
+            }
+            .list-view .card-info {
+                border-top: none;
+                border-left: 1px solid var(--border);
+                flex: 1;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 10px 18px;
+            }
+            .list-view .card-name {
+                margin-bottom: 0;
+                white-space: nowrap;
+                min-width: 160px;
+            }
+
+            /* ── Modal ── */
+            .modal-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 200;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+            }
+            .modal-overlay.open {
+                display: flex;
+            }
+            .modal {
+                background: var(--surface);
+                border-radius: 16px;
+                width: 90vw;
+                max-width: 680px;
+                max-height: 85vh;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+            }
+            .modal-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 20px 24px;
+                border-bottom: 1px solid var(--border);
+                flex-shrink: 0;
+            }
+            .modal-scroll {
+                overflow-y: auto;
+                flex: 1;
+                min-height: 0;
+            }
+            .modal-title {
+                font-size: 20px;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+            }
+            .modal-close {
+                width: 32px;
+                height: 32px;
+                border-radius: 8px;
+                border: none;
+                background: var(--accent-soft);
+                color: var(--text);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+            }
+            .modal-close:hover {
+                background: var(--border);
+            }
+            .modal-style-group {
+                border-bottom: 1px solid var(--border);
+            }
+            .modal-style-label {
+                padding: 10px 24px 0;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                color: var(--text-secondary);
+            }
+            .modal-preview-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1px;
+                background: var(--border);
+                margin: 0;
+            }
+            .modal-preview-cell {
+                flex: 1 1 calc(33.333% - 1px);
+                min-width: calc(33.333% - 1px);
+                padding: 20px 16px;
+                background: var(--bg);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                position: relative;
+            }
+            .modal-preview-cell .cell-download {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 22px;
+                height: 22px;
+                border-radius: 5px;
+                border: 1px solid var(--border);
+                background: var(--bg);
+                color: var(--text-secondary);
+                cursor: pointer;
+                padding: 0;
+                position: absolute;
+                top: 6px;
+                right: 6px;
+                opacity: 0;
+                transition: opacity 0.15s, background 0.15s, color 0.15s;
+                text-decoration: none;
+            }
+            .modal-preview-cell:hover .cell-download {
+                opacity: 1;
+            }
+            .modal-preview-cell .cell-download:hover {
+                background: var(--accent-soft);
+                color: var(--text);
+            }
+            .modal-preview-cell > svg {
+                width: 100%;
+                max-width: 200px;
+                max-height: 56px;
+                fill: var(--text);
+            }
+            .modal-preview-cell .pw-label {
+                font-size: 9px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: var(--text-secondary);
+            }
+            .modal-body {
+                padding: 20px 24px;
+            }
+            .modal-section {
+                margin-bottom: 16px;
+            }
+            .modal-section:last-child {
+                margin-bottom: 0;
+            }
+            .modal-row {
+                display: flex;
+                gap: 24px;
+            }
+            .modal-label {
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                color: var(--text-secondary);
+                margin-bottom: 6px;
+            }
+            .modal-link {
+                display: inline-block;
+                padding: 7px 14px;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                font-size: 13px;
+                color: var(--text);
+                text-decoration: none;
+                margin-right: 8px;
+                transition: all 0.15s;
+            }
+            .modal-link:hover {
+                background: var(--accent-soft);
+            }
+
+            .keyword-tags {
+                display: flex;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+            .keyword-tag {
+                font-size: 12px;
+                padding: 4px 10px;
+                border-radius: 14px;
+                background: var(--accent-soft);
+                color: var(--text-secondary);
+                border: 1px solid var(--border);
+            }
+
+            .no-results {
+                grid-column: 1 / -1;
+                text-align: center;
+                padding: 80px 20px;
+                color: var(--text-secondary);
+                font-size: 15px;
+            }
+            #loading {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 60vh;
+                gap: 16px;
+                color: var(--text-secondary);
+                font-size: 14px;
+            }
+            .spinner {
+                width: 28px;
+                height: 28px;
+                border: 2.5px solid var(--border);
+                border-top-color: var(--text);
+                border-radius: 50%;
+                animation: spin 0.6s linear infinite;
+            }
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @media (max-width: 768px) {
+                .header-row {
+                    padding: 10px 16px;
+                    gap: 10px;
+                }
+                #grid {
+                    padding: 16px;
+                    gap: 12px;
+                    grid-template-columns: 1fr 1fr;
+                }
+                .list-view .card {
+                    flex-direction: column;
+                }
+                .list-view .card-preview {
+                    width: 100%;
+                }
+                .list-view .card-info {
+                    border-left: none;
+                    border-top: 1px solid var(--border);
+                    flex-wrap: wrap;
+                }
+            }
+            @media (max-width: 480px) {
+                #grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+        <script src="font-database-decorated.js"></script>
+    </head>
+    <body>
+        <header>
+            <div class="header-row">
+                <div class="logo">GoogleFontsDB</div>
+                <span class="header-meta" id="version-label"></span>
+                <div class="count" id="count"></div>
+                <div class="search-wrap" style="flex:1;max-width:none">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input id="search" type="text" placeholder="Search font families..." autofocus />
+                </div>
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="grid" title="Grid view"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+                    <button class="view-btn" data-view="list" title="List view"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg></button>
+                </div>
+                <select id="sort">
+                    <option value="name-asc">A &rarr; Z</option>
+                    <option value="name-desc">Z &rarr; A</option>
+                    <option value="weights-desc">Most weights</option>
+                    <option value="weights-asc">Fewest weights</option>
+                </select>
+            </div>
+            <div class="header-row filter-bar">
+                <div class="filter-group" id="cat-filters"></div>
+                <div style="flex:1;min-width:8px"></div>
+                <div class="filter-group" id="weight-area">
+                    <button class="fbtn-icon" id="perceived-toggle" title="Perceived Thickness"><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="4" cy="7" r="2" fill="currentColor" opacity="0.4"/><circle cx="10" cy="7" r="3" fill="currentColor"/></svg></button>
+                    <div class="filter-group" id="weight-selector"></div>
+                    <div class="filter-group" id="thickness-slider-wrap" style="display:none">
+                        <input type="range" id="thickness-slider" min="0" max="9" value="3" step="1" />
+                        <span class="header-meta" id="thickness-label">regular</span>
+                    </div>
+                </div>
+                <div style="flex:1;min-width:8px"></div>
+                <div class="filter-group" id="style-filters"></div>
+            </div>
+        </header>
+
+        <div id="loading">
+            <div class="spinner"></div>
+            Loading font database...
+        </div>
+        <div id="grid" style="display: none"></div>
+
+        <div class="modal-overlay" id="modal-overlay">
+            <div class="modal" id="modal">
+                <div class="modal-header">
+                    <div class="modal-title" id="modal-title"></div>
+                    <button class="modal-close" id="modal-close">
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-scroll">
+                    <div id="modal-previews"></div>
+                    <div class="modal-body" id="modal-body"></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const WEIGHT_MAP = {
+                100: "Thin",
+                200: "ExtraLight",
+                300: "Light",
+                400: "Regular",
+                500: "Medium",
+                600: "SemiBold",
+                700: "Bold",
+                900: "Black",
+            };
+            const ALL_WEIGHTS = [100, 200, 300, 400, 500, 600, 700, 900];
+            const CATEGORIES = [
+                "sans-serif",
+                "serif",
+                "display",
+                "handwriting",
+                "monospace",
+            ];
+            const CAT_LABELS = {
+                "sans-serif": "Sans",
+                serif: "Serif",
+                display: "Display",
+                handwriting: "Hand",
+                monospace: "Mono",
+            };
+
+            // Weight suffixes (strip first, order: longer first)
+            const WEIGHT_SUFFIXES = [
+                ["Extra Light", 200],
+                ["ExtraLight", 200],
+                ["Extra Bold", 700],
+                ["ExtraBold", 700],
+                ["Semi Bold", 600],
+                ["SemiBold", 600],
+                ["Thin", 100],
+                ["Light", 300],
+                ["Medium", 500],
+                ["Bold", 700],
+                ["Black", 900],
+            ];
+
+            // Style suffixes (strip second, order: longer first)
+            const STYLE_SUFFIXES = [
+                "Ultra Condensed",
+                "UltraCondensed",
+                "Extra Condensed",
+                "ExtraCondensed",
+                "Semi Condensed",
+                "SemiCondensed",
+                "Ultra Expanded",
+                "UltraExpanded",
+                "Extra Expanded",
+                "ExtraExpanded",
+                "Semi Expanded",
+                "SemiExpanded",
+                "Condensed",
+                "Expanded",
+                "Narrow",
+                "SC",
+                "Slab",
+                "Display",
+                "Text",
+                "Inline",
+                "Stencil",
+                "Outline",
+            ];
+
+            // Style filter groups: label -> which raw style values match
+            const STYLE_FILTER_GROUPS = [
+                ["Condensed", (s) => /condensed|narrow/i.test(s)],
+                ["Expanded", (s) => /expanded/i.test(s)],
+                [
+                    "SC",
+                    (s) =>
+                        s === "SC" || s.endsWith(" SC") || s.startsWith("SC "),
+                ],
+                ["Slab", (s) => /slab/i.test(s)],
+                ["Display", (s) => /display/i.test(s)],
+                [
+                    "Text",
+                    (s) =>
+                        s === "Text" ||
+                        s.endsWith(" Text") ||
+                        s.startsWith("Text "),
+                ],
+                ["Inline", (s) => /inline/i.test(s)],
+                ["Stencil", (s) => /stencil/i.test(s)],
+            ];
+
+            let fontData = {};
+            let superFamilies = {}; // name -> { category, styles: { styleName: { weight: fontEntryName } } }
+            let superFamilyNames = [];
+            let activeCategory = null;
+            let activeWeight = null; // null = All
+            let activeStyle = null; // null = All
+            let activeThickness = null; // null = off
+            let perceivedMode = false;
+
+            const THICKNESS_STEPS = [
+                "thin", "extra-light", "light", "regular", "medium",
+                "semi-bold", "bold", "extra-bold", "black", "extra-black"
+            ];
+            const THICKNESS_LABELS = {
+                "thin": "Thin", "extra-light": "Extra Light", "light": "Light",
+                "regular": "Regular", "medium": "Medium", "semi-bold": "Semi Bold",
+                "bold": "Bold", "extra-bold": "Extra Bold", "black": "Black",
+                "extra-black": "Extra Black"
+            };
+
+            // ── Parse ──
+            function stripWeight(name) {
+                for (const [suf, w] of WEIGHT_SUFFIXES) {
+                    if (name.endsWith(" " + suf)) {
+                        const fam = name.slice(0, -(suf.length + 1));
+                        if (fam) return [fam, w];
+                    }
+                }
+                return [name, 400];
+            }
+
+            function stripStyles(name) {
+                const parts = [];
+                let changed = true;
+                while (changed) {
+                    changed = false;
+                    for (const suf of STYLE_SUFFIXES) {
+                        if (name.endsWith(" " + suf)) {
+                            name = name.slice(0, -(suf.length + 1));
+                            parts.unshift(suf);
+                            changed = true;
+                            break;
+                        }
+                    }
+                }
+                return [name, parts.join(" ")];
+            }
+
+            function buildSuperFamilies() {
+                superFamilies = {};
+                for (const entryName of Object.keys(fontData)) {
+                    const [afterWeight, weight] = stripWeight(entryName);
+                    const [superName, style] = stripStyles(afterWeight);
+                    const styleName = style || "Regular";
+
+                    if (!superFamilies[superName]) {
+                        superFamilies[superName] = {
+                            category: fontData[entryName].category,
+                            styles: {},
+                        };
+                    }
+                    if (!superFamilies[superName].styles[styleName]) {
+                        superFamilies[superName].styles[styleName] = {};
+                    }
+                    superFamilies[superName].styles[styleName][weight] =
+                        entryName;
+                }
+                superFamilyNames = Object.keys(superFamilies);
+            }
+
+            // ── Helpers for a superfamily ──
+            function allWeightsOf(sf) {
+                const ws = new Set();
+                for (const style of Object.values(sf.styles)) {
+                    for (const w of Object.keys(style)) ws.add(+w);
+                }
+                return ws;
+            }
+
+            function allStyleNamesOf(sf) {
+                return Object.keys(sf.styles);
+            }
+
+            function matchesStyleFilter(sf, filterLabel) {
+                if (!filterLabel) return true;
+                const matcher = STYLE_FILTER_GROUPS.find(
+                    ([l]) => l === filterLabel,
+                )?.[1];
+                if (!matcher) return true;
+                return allStyleNamesOf(sf).some((s) => matcher(s));
+            }
+
+            // Get best font entry for a superfamily given weight + preferred style
+            function bestEntry(sf, weight, preferredStyle) {
+                // 1. If a specific style filter is active, try matching styles first
+                const candidateStyles = preferredStyle
+                    ? Object.keys(sf.styles).filter((s) => {
+                          const matcher = STYLE_FILTER_GROUPS.find(
+                              ([l]) => l === preferredStyle,
+                          )?.[1];
+                          return matcher ? matcher(s) : s === preferredStyle;
+                      })
+                    : [
+                          "Regular",
+                          ...Object.keys(sf.styles).filter(
+                              (s) => s !== "Regular",
+                          ),
+                      ];
+
+                for (const styleName of candidateStyles) {
+                    const style = sf.styles[styleName];
+                    if (!style) continue;
+                    if (style[weight])
+                        return {
+                            entry: style[weight],
+                            style: styleName,
+                            weight,
+                            exact: true,
+                        };
+                }
+
+                // 2. Find closest weight in candidate styles
+                for (const styleName of candidateStyles) {
+                    const style = sf.styles[styleName];
+                    if (!style) continue;
+                    let best = null,
+                        bestDist = Infinity;
+                    for (const w of Object.keys(style)) {
+                        const d = Math.abs(+w - weight);
+                        if (d < bestDist) {
+                            bestDist = d;
+                            best = +w;
+                        }
+                    }
+                    if (best !== null)
+                        return {
+                            entry: style[best],
+                            style: styleName,
+                            weight: best,
+                            exact: false,
+                        };
+                }
+
+                // 3. Fallback: any entry
+                for (const styleName of Object.keys(sf.styles)) {
+                    const style = sf.styles[styleName];
+                    const w = Object.keys(style)
+                        .map(Number)
+                        .sort(
+                            (a, b) =>
+                                Math.abs(a - weight) - Math.abs(b - weight),
+                        )[0];
+                    if (w !== undefined)
+                        return {
+                            entry: style[w],
+                            style: styleName,
+                            weight: w,
+                            exact: false,
+                        };
+                }
+                return null;
+            }
+
+            // ── Init ──
+            function loadDb(db) {
+                fontData = db.fonts;
+                buildSuperFamilies();
+                document.getElementById("version-label").textContent =
+                    db.version || "";
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("grid").style.display = "";
+                buildCatFilters();
+                buildWeightSelector();
+                buildStyleFilters();
+                setupPerceivedToggle();
+                render();
+            }
+
+            function boot() {
+                if (window.__FONT_DB__) {
+                    loadDb(window.__FONT_DB__);
+                } else {
+                    (async () => {
+                        try {
+                            const res = await fetch("font-database.json");
+                            loadDb(await res.json());
+                        } catch {
+                            document.getElementById("loading").innerHTML =
+                                "Failed to load font data. Ensure <code>font-database-decorated.js</code> is in the same folder, or serve via HTTP.";
+                        }
+                    })();
+                }
+            }
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", boot);
+            } else {
+                boot();
+            }
+
+            // ── Filter helpers ──
+            function addFilterBtn(container, label, active, onClick, cls) {
+                const btn = document.createElement("button");
+                btn.className = (cls || "fbtn") + (active ? " active" : "");
+                if (typeof label === "string") {
+                    btn.textContent = label;
+                } else {
+                    btn.innerHTML = label.html;
+                    if (label.title) btn.title = label.title;
+                }
+                btn.onclick = (e) => onClick(e);
+                container.appendChild(btn);
+            }
+
+            // Weight icon SVGs - bars of increasing thickness
+            const WEIGHT_ICONS = {
+                100: {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="5.5" y="2" width="3" height="10" rx="1" fill="currentColor" opacity="0.3"/></svg>`, title: "Thin"},
+                200: {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="5" y="2" width="4" height="10" rx="1" fill="currentColor" opacity="0.4"/></svg>`, title: "ExtraLight"},
+                300: {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="4.5" y="2" width="5" height="10" rx="1" fill="currentColor" opacity="0.5"/></svg>`, title: "Light"},
+                400: {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="4" y="2" width="6" height="10" rx="1" fill="currentColor" opacity="0.6"/></svg>`, title: "Regular"},
+                500: {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="3.5" y="2" width="7" height="10" rx="1.5" fill="currentColor" opacity="0.7"/></svg>`, title: "Medium"},
+                600: {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="3" y="2" width="8" height="10" rx="1.5" fill="currentColor" opacity="0.8"/></svg>`, title: "SemiBold"},
+                700: {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="2.5" y="2" width="9" height="10" rx="2" fill="currentColor" opacity="0.9"/></svg>`, title: "Bold"},
+                900: {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="2" y="2" width="10" height="10" rx="2" fill="currentColor"/></svg>`, title: "Black"},
+            };
+
+            // Style icons - all icon-only
+            const STYLE_ICONS = {
+                "Condensed": {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="3" y="2" width="2.5" height="10" rx="0.5" fill="currentColor"/><rect x="8.5" y="2" width="2.5" height="10" rx="0.5" fill="currentColor"/></svg>`, title: "Condensed"},
+                "Expanded": {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="1" y="2" width="2.5" height="10" rx="0.5" fill="currentColor"/><rect x="10.5" y="2" width="2.5" height="10" rx="0.5" fill="currentColor"/></svg>`, title: "Expanded"},
+                "SC": {html: `<svg width="14" height="14" viewBox="0 0 14 14"><text x="1" y="11" font-size="10" font-weight="700" fill="currentColor">A</text><text x="8" y="11" font-size="7" font-weight="700" fill="currentColor">a</text></svg>`, title: "Small Caps"},
+                "Slab": {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="2" y="2" width="10" height="2" rx="0.5" fill="currentColor"/><rect x="5.5" y="4" width="3" height="6" fill="currentColor"/><rect x="2" y="10" width="10" height="2" rx="0.5" fill="currentColor"/></svg>`, title: "Slab"},
+                "Display": {html: `<svg width="14" height="14" viewBox="0 0 14 14"><text x="7" y="11.5" font-size="12" font-weight="900" text-anchor="middle" fill="currentColor">D</text></svg>`, title: "Display"},
+                "Text": {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="2" y="2" width="10" height="1.5" fill="currentColor"/><rect x="6" y="2" width="2" height="10" fill="currentColor"/><rect x="4" y="10.5" width="6" height="1.5" fill="currentColor"/></svg>`, title: "Text"},
+                "Inline": {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="2" y="3" width="10" height="2" rx="0.5" fill="currentColor" opacity="0.4"/><rect x="2" y="6" width="10" height="2" rx="0.5" fill="currentColor"/><rect x="2" y="9" width="10" height="2" rx="0.5" fill="currentColor" opacity="0.4"/></svg>`, title: "Inline"},
+                "Stencil": {html: `<svg width="14" height="14" viewBox="0 0 14 14"><rect x="3" y="2" width="3" height="4" rx="0.5" fill="currentColor"/><rect x="8" y="2" width="3" height="4" rx="0.5" fill="currentColor"/><rect x="3" y="8" width="3" height="4" rx="0.5" fill="currentColor"/><rect x="8" y="8" width="3" height="4" rx="0.5" fill="currentColor"/></svg>`, title: "Stencil"},
+            };
+
+            // ── Toggle helper: click selects, click again deselects ──
+            function toggleFilter(wrap, btn, activate, deactivate) {
+                const isActive = btn.classList.contains("active");
+                [...wrap.children].forEach(b => b.classList.remove("active"));
+                if (isActive) {
+                    deactivate();
+                } else {
+                    btn.classList.add("active");
+                    activate();
+                }
+                render();
+            }
+
+            // ── Category filters (text buttons) ──
+            function buildCatFilters() {
+                const wrap = document.getElementById("cat-filters");
+                for (const cat of CATEGORIES) {
+                    addFilterBtn(wrap, CAT_LABELS[cat], false, (e) => {
+                        toggleFilter(wrap, e.currentTarget,
+                            () => { activeCategory = cat; },
+                            () => { activeCategory = null; });
+                    });
+                }
+            }
+
+            // ── Weight selector (icon buttons) ──
+            function buildWeightSelector() {
+                const wrap = document.getElementById("weight-selector");
+                for (let i = 0; i < ALL_WEIGHTS.length; i++) {
+                    const w = ALL_WEIGHTS[i];
+                    addFilterBtn(wrap, WEIGHT_ICONS[w], false, (e) => {
+                        toggleFilter(wrap, e.currentTarget,
+                            () => { activeWeight = w; },
+                            () => { activeWeight = null; });
+                    }, "fbtn-icon");
+                }
+            }
+
+            // ── Style filters (icon buttons) ──
+            function buildStyleFilters() {
+                const wrap = document.getElementById("style-filters");
+                for (let i = 0; i < STYLE_FILTER_GROUPS.length; i++) {
+                    const [label] = STYLE_FILTER_GROUPS[i];
+                    addFilterBtn(wrap, STYLE_ICONS[label], false, (e) => {
+                        toggleFilter(wrap, e.currentTarget,
+                            () => { activeStyle = label; },
+                            () => { activeStyle = null; });
+                    }, "fbtn-icon");
+                }
+            }
+
+            // ── Perceived thickness toggle + slider ──
+            function setupPerceivedToggle() {
+                const toggle = document.getElementById("perceived-toggle");
+                const weightBtns = document.getElementById("weight-selector");
+                const sliderWrap = document.getElementById("thickness-slider-wrap");
+                const slider = document.getElementById("thickness-slider");
+                const label = document.getElementById("thickness-label");
+
+                toggle.onclick = () => {
+                    perceivedMode = !perceivedMode;
+                    toggle.classList.toggle("active", perceivedMode);
+                    if (perceivedMode) {
+                        weightBtns.style.display = "none";
+                        sliderWrap.style.display = "flex";
+                        activeWeight = null;
+                        // Clear weight button selection
+                        [...weightBtns.children].forEach(b => b.classList.remove("active"));
+                        // Apply current slider value
+                        const idx = +slider.value;
+                        activeThickness = THICKNESS_STEPS[idx];
+                        label.textContent = THICKNESS_LABELS[activeThickness];
+                    } else {
+                        weightBtns.style.display = "flex";
+                        sliderWrap.style.display = "none";
+                        activeThickness = null;
+                    }
+                    render();
+                };
+
+                slider.oninput = () => {
+                    const idx = +slider.value;
+                    activeThickness = THICKNESS_STEPS[idx];
+                    label.textContent = THICKNESS_LABELS[activeThickness];
+                    render();
+                };
+            }
+
+            // Legacy pill helpers (kept for any remaining usage)
+            function addPill(container, label, active, onClick) {
+                const btn = document.createElement("button");
+                btn.className = "pill" + (active ? " active" : "");
+                btn.textContent = label;
+                btn.onclick = onClick;
+                container.appendChild(btn);
+            }
+
+            function activatePill(container, index) {
+                container
+                    .querySelectorAll(".pill")
+                    .forEach((b, i) =>
+                        b.classList.toggle("active", i === index),
+                    );
+            }
+
+            // ── Sorting ──
+            function getSorted(names) {
+                const s = document.getElementById("sort").value;
+                const arr = [...names];
+                switch (s) {
+                    case "name-asc":
+                        return arr.sort((a, b) => a.localeCompare(b));
+                    case "name-desc":
+                        return arr.sort((a, b) => b.localeCompare(a));
+                    case "weights-desc":
+                        return arr.sort(
+                            (a, b) =>
+                                allWeightsOf(superFamilies[b]).size -
+                                allWeightsOf(superFamilies[a]).size,
+                        );
+                    case "weights-asc":
+                        return arr.sort(
+                            (a, b) =>
+                                allWeightsOf(superFamilies[a]).size -
+                                allWeightsOf(superFamilies[b]).size,
+                        );
+                }
+                return arr;
+            }
+
+            // ── Render ──
+            const BATCH = 80;
+            let rendered = 0,
+                filtered = [],
+                scrollObs = null;
+
+            function render() {
+                const q = document
+                    .getElementById("search")
+                    .value.toLowerCase()
+                    .trim();
+                filtered = superFamilyNames.filter((name) => {
+                    if (q && !name.toLowerCase().includes(q)) return false;
+                    const sf = superFamilies[name];
+                    if (activeCategory && sf.category !== activeCategory)
+                        return false;
+                    if (activeStyle && !matchesStyleFilter(sf, activeStyle))
+                        return false;
+                    // Weight filter: family must have the selected weight in at least one matching style
+                    if (activeWeight && !familyHasWeight(sf, activeWeight, activeStyle))
+                        return false;
+                    // Thickness filter
+                    if (activeThickness) {
+                        const refEntry = Object.values(Object.values(sf.styles)[0])[0];
+                        const refFont = fontData[refEntry];
+                        if (refFont?.perceived_thickness !== activeThickness) return false;
+                    }
+                    return true;
+                });
+                filtered = getSorted(filtered);
+
+                document.getElementById("count").textContent =
+                    `${filtered.length} families`;
+                rendered = 0;
+                const grid = document.getElementById("grid");
+                grid.innerHTML = "";
+                if (!filtered.length) {
+                    grid.innerHTML =
+                        '<div class="no-results">No font families match your filters.</div>';
+                    return;
+                }
+                appendBatch();
+                setupScroll();
+            }
+
+            function familyHasWeight(sf, weight, styleFilter) {
+                for (const [styleName, weights] of Object.entries(sf.styles)) {
+                    if (styleFilter) {
+                        const matcher = STYLE_FILTER_GROUPS.find(
+                            ([l]) => l === styleFilter,
+                        )?.[1];
+                        if (matcher && !matcher(styleName)) continue;
+                    }
+                    if (weights[weight]) return true;
+                }
+                return false;
+            }
+
+            function appendBatch() {
+                const grid = document.getElementById("grid");
+                const end = Math.min(rendered + BATCH, filtered.length);
+                for (let i = rendered; i < end; i++)
+                    grid.appendChild(createCard(filtered[i]));
+                rendered = end;
+            }
+
+            function setupScroll() {
+                if (scrollObs) scrollObs.disconnect();
+                const s = document.createElement("div");
+                s.style.height = "1px";
+                document.getElementById("grid").appendChild(s);
+                scrollObs = new IntersectionObserver(
+                    (entries) => {
+                        if (
+                            entries[0].isIntersecting &&
+                            rendered < filtered.length
+                        ) {
+                            s.remove();
+                            appendBatch();
+                            const ns = document.createElement("div");
+                            ns.style.height = "1px";
+                            document.getElementById("grid").appendChild(ns);
+                            scrollObs.observe(ns);
+                        }
+                    },
+                    { rootMargin: "400px" },
+                );
+                scrollObs.observe(s);
+            }
+
+            // ── Card ──
+            function createCard(name) {
+                const sf = superFamilies[name];
+                const allW = allWeightsOf(sf);
+                const styleNames = allStyleNamesOf(sf).filter(
+                    (s) => s !== "Regular",
+                );
+                const match = bestEntry(sf, activeWeight || 400, activeStyle);
+
+                const card = document.createElement("div");
+                card.className = "card";
+                card.dataset.family = name;
+                card.onclick = () => openModal(name);
+
+                const dots = ALL_WEIGHTS.map((w) => {
+                    const filled = allW.has(w);
+                    const current = w === activeWeight && filled;
+                    return `<div class="weight-dot${filled ? " filled" : ""}${current ? " current" : ""}" title="${WEIGHT_MAP[w]}"></div>`;
+                }).join("");
+
+                const styleTags =
+                    styleNames
+                        .slice(0, 4)
+                        .map((s) => `<span class="style-tag">${esc(s)}</span>`)
+                        .join("") +
+                    (styleNames.length > 4
+                        ? `<span class="style-tag">+${styleNames.length - 4}</span>`
+                        : "");
+
+                const isVariable = allW.size >= 6;
+                const downloadUrl = match ? getFontDownloadUrl(fontData[match.entry]) : null;
+                const dlBtn = downloadUrl
+                    ? `<button class="card-download" title="Download font file" data-url="${esc(downloadUrl)}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>`
+                    : "";
+
+                card.innerHTML = `
+    <div class="card-preview">${placeholder(name)}${dlBtn}</div>
+    <div class="card-info">
+      <div class="card-name">${esc(name)}</div>
+      <div class="card-meta">
+        <div class="card-meta-left">
+          <span class="badge">${CAT_LABELS[sf.category] || sf.category}</span>
+          ${styleTags ? `<div class="style-tags">${styleTags}</div>` : ""}
+          ${isVariable ? `<span class="badge-variable">Variable</span>` : ""}
+        </div>
+        <div class="card-meta-right">
+          <div class="weight-dots">${dots}<span class="weight-label">${allW.size}w</span></div>
+        </div>
+      </div>
+    </div>`;
+
+                // Lazy SVG
+                if (match) {
+                    const font = fontData[match.entry];
+                    const previewEl = card.querySelector(".card-preview");
+                    if (font?.preview?.svg_compressed) {
+                        const io = new IntersectionObserver(
+                            (entries, obs) => {
+                                if (entries[0].isIntersecting) {
+                                    obs.disconnect();
+                                    decompress(
+                                        font.preview.svg_compressed,
+                                    ).then((svg) => {
+                                        if (!svg) return;
+                                        previewEl.innerHTML = svg;
+                                        if (!match.exact) {
+                                            const lbl =
+                                                document.createElement("span");
+                                            lbl.className = "fallback-label";
+                                            lbl.textContent =
+                                                (match.style !== "Regular"
+                                                    ? match.style + " "
+                                                    : "") +
+                                                WEIGHT_MAP[match.weight];
+                                            previewEl.appendChild(lbl);
+                                        } else if (
+                                            match.style !== "Regular" &&
+                                            activeStyle
+                                        ) {
+                                            const lbl =
+                                                document.createElement("span");
+                                            lbl.className = "fallback-label";
+                                            lbl.textContent = match.style;
+                                            previewEl.appendChild(lbl);
+                                        }
+                                    });
+                                }
+                            },
+                            { rootMargin: "200px" },
+                        );
+                        io.observe(previewEl);
+                    }
+                }
+
+                const dlEl = card.querySelector(".card-download");
+                if (dlEl) {
+                    dlEl.onclick = (e) => {
+                        e.stopPropagation();
+                        const a = document.createElement("a");
+                        a.href = dlEl.dataset.url;
+                        a.download = "";
+                        a.click();
+                    };
+                }
+
+                return card;
+            }
+
+            function placeholder(name) {
+                const d = name.length > 18 ? name.slice(0, 16) + "..." : name;
+                return `<svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg"><text x="100" y="40" text-anchor="middle" font-size="24" font-family="system-ui" fill="var(--text-secondary)" opacity=".3">${esc(d)}</text></svg>`;
+            }
+
+            // ── Decompress ──
+            async function decompress(compressed) {
+                try {
+                    const bytes = Uint8Array.from(atob(compressed), (c) =>
+                        c.charCodeAt(0),
+                    );
+                    const ds = new DecompressionStream("gzip");
+                    const w = ds.writable.getWriter();
+                    w.write(bytes);
+                    w.close();
+                    const r = ds.readable.getReader();
+                    const chunks = [];
+                    while (true) {
+                        const { done, value } = await r.read();
+                        if (done) break;
+                        chunks.push(value);
+                    }
+                    return await new Blob(chunks).text();
+                } catch {
+                    return null;
+                }
+            }
+
+            // ── Modal ──
+            function openModal(name) {
+                const sf = superFamilies[name];
+                document.getElementById("modal-title").textContent = name;
+
+                const previewsEl = document.getElementById("modal-previews");
+                previewsEl.innerHTML = "";
+
+                // Group by style, show weights within each
+                const styleOrder = [
+                    "Regular",
+                    ...Object.keys(sf.styles)
+                        .filter((s) => s !== "Regular")
+                        .sort(),
+                ];
+                for (const styleName of styleOrder) {
+                    const weights = sf.styles[styleName];
+                    if (!weights) continue;
+
+                    const group = document.createElement("div");
+                    group.className = "modal-style-group";
+
+                    if (styleOrder.length > 1 || styleName !== "Regular") {
+                        const label = document.createElement("div");
+                        label.className = "modal-style-label";
+                        label.textContent = styleName;
+                        group.appendChild(label);
+                    }
+
+                    const row = document.createElement("div");
+                    row.className = "modal-preview-row";
+                    for (const w of Object.keys(weights)
+                        .map(Number)
+                        .sort((a, b) => a - b)) {
+                        const cell = document.createElement("div");
+                        cell.className = "modal-preview-cell";
+                        const font = fontData[weights[w]] || fontData[weights[String(w)]];
+                        const cellDlUrl = getFontDownloadUrl(font);
+                        const dlSvg = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+                        const cellDlHtml = cellDlUrl
+                            ? `<a class="cell-download" href="${esc(cellDlUrl)}" download title="Download ${WEIGHT_MAP[w] || w}">${dlSvg}</a>`
+                            : "";
+                        cell.innerHTML =
+                            `<span class="pw-label">${WEIGHT_MAP[w] || w}</span>` +
+                            placeholder(name) + cellDlHtml;
+                        row.appendChild(cell);
+
+                        if (font?.preview?.svg_compressed) {
+                            decompress(font.preview.svg_compressed).then(
+                                (svg) => {
+                                    if (svg) {
+                                        cell.innerHTML =
+                                            `<span class="pw-label">${WEIGHT_MAP[w] || w}</span>` +
+                                            svg + cellDlHtml;
+                                    }
+                                },
+                            );
+                        }
+                    }
+                    group.appendChild(row);
+                    previewsEl.appendChild(group);
+                }
+
+                // Body
+                const refEntry = Object.values(Object.values(sf.styles)[0])[0];
+                const refFont = fontData[refEntry];
+
+                // Collect mood + keywords from the reference font (Regular 400 preferred)
+                const moodSrc = refFont?.mood
+                    ? refFont
+                    : Object.values(fontData).find(
+                          (f) =>
+                              f.mood &&
+                              Object.values(sf.styles).some((s) =>
+                                  Object.values(s).some(
+                                      (e) => fontData[e] === f,
+                                  ),
+                              ),
+                      );
+                const mood = refFont?.mood || "";
+                const keywords = refFont?.keywords || [];
+                const thickness = refFont?.perceived_thickness || "";
+
+                let body = "";
+
+                if (mood) {
+                    body += `<div class="modal-section">
+      <div class="modal-label">Mood</div>
+      <div style="font-size:15px;font-style:italic;color:var(--text)">${esc(mood)}</div>
+    </div>`;
+                }
+
+                // Category + Thickness inline
+                body += `<div class="modal-section modal-row">
+    <div><div class="modal-label">Category</div>
+    <span class="badge" style="font-size:12px">${sf.category}</span></div>`;
+                if (thickness) {
+                    body += `<div><div class="modal-label">Thickness</div>
+    <span class="badge" style="font-size:12px;text-transform:capitalize">${esc(thickness)}</span></div>`;
+                }
+                body += `</div>`;
+
+                if (keywords.length) {
+                    body += `<div class="modal-section">
+      <div class="modal-label">Keywords</div>
+      <div class="keyword-tags">${keywords.map((k) => `<span class="keyword-tag">${esc(k)}</span>`).join("")}</div>
+    </div>`;
+                }
+
+                // License + Google Fonts single line
+                const gfUrl = `https://fonts.google.com/specimen/${encodeURIComponent(name.replace(/ /g, "+"))}`;
+                const licenseHtml = refFont?.license?.url
+                    ? `<strong>License:</strong> <a href="${refFont.license.url}" target="_blank" rel="noopener" style="color:var(--text-secondary)">${refFont.license.type || "View"}</a> &middot; `
+                    : "";
+                body += `<div class="modal-section" style="font-size:13px;color:var(--text-secondary)">
+    ${licenseHtml}<strong>URL:</strong> <a href="${gfUrl}" target="_blank" rel="noopener" style="color:var(--text-secondary)">Google Fonts</a>
+  </div>`;
+
+                document.getElementById("modal-body").innerHTML = body;
+                document.getElementById("modal-overlay").classList.add("open");
+                document.body.style.overflow = "hidden";
+            }
+
+            function closeModal() {
+                document
+                    .getElementById("modal-overlay")
+                    .classList.remove("open");
+                document.body.style.overflow = "";
+            }
+            document.getElementById("modal-close").onclick = closeModal;
+            document.getElementById("modal-overlay").onclick = (e) => {
+                if (e.target === e.currentTarget) closeModal();
+            };
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") closeModal();
+            });
+
+            // ── Events ──
+            let searchTimer;
+            document.getElementById("search").addEventListener("input", () => {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(render, 150);
+            });
+            document.getElementById("sort").addEventListener("change", render);
+            document.querySelectorAll(".view-btn").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    document
+                        .querySelectorAll(".view-btn")
+                        .forEach((b) => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    document
+                        .getElementById("grid")
+                        .classList.toggle(
+                            "list-view",
+                            btn.dataset.view === "list",
+                        );
+                });
+            });
+
+            function getFontDownloadUrl(font) {
+                const v = font?.variants?.[0];
+                if (!v) return null;
+                if (v.download_url) return v.download_url;
+                if (v.filename && font.base_url) return font.base_url + v.filename;
+                return null;
+            }
+
+            function esc(s) {
+                return s
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;");
+            }
+        </script>
+    </body>
+</html>
