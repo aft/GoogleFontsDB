@@ -2,25 +2,6 @@
 
 All notable changes to the Google Fonts database will be documented in this file.
 
-## [2026/06] - 2026-06-01
-
-## 📈 Database Changes
-
-**Total font families:** 2,414 (+3 from previous version)
-
-### ✨ New Fonts (3)
-
-**Sans-Serif:**
-- **Alien Block** (1 variants)
-- **Montenegrin Gothic One** (1 variants)
-- **Pliant Thin** (2 variants)
-
-### 🔄 Updated Fonts (1)
-
-- **Noto Sans NKo**: Preview added
-
----
-
 ## [2026/05] - 2026-05-01
 
 ## 📈 Database Changes

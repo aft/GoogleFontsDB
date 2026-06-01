@@ -1,25 +1,14 @@
 ## 📈 Database Changes
 
-**Total font families:** 2,411 (+6 from previous version)
+**Total font families:** 2,414 (+3 from previous version)
 
-### ✨ New Fonts (6)
-
-**Display:**
-- **Finlandica Headline Thin** (2 variants)
+### ✨ New Fonts (3)
 
 **Sans-Serif:**
-- **Akt** (1 variants)
-- **Estedad** (1 variants)
-- **Finlandica Text Medium** (2 variants)
-- **M PLUS U Thin** (1 variants)
-- **Strichpunkt Sans** (1 variants)
+- **Alien Block** (1 variants)
+- **Montenegrin Gothic One** (1 variants)
+- **Pliant Thin** (2 variants)
 
-### 🔄 Updated Fonts (2)
+### 🔄 Updated Fonts (1)
 
-- **Geist**: 1 → 2 variants (+1)
-- **Geist Mono**: 1 → 2 variants (+1)
-
-### 🆕 New Variants (2 families)
-
-- **Geist**: 400 italic
-- **Geist Mono**: 400 italic
+- **Noto Sans NKo**: Preview added
