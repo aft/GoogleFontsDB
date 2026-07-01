@@ -2,25 +2,6 @@
 
 All notable changes to the Google Fonts database will be documented in this file.
 
-## [2026/07] - 2026-07-01
-
-## 📈 Database Changes
-
-**Total font families:** 2,419 (+5 from previous version)
-
-### ✨ New Fonts (5)
-
-**Monospace:**
-- **Hibur Mono** (1 variants)
-
-**Sans-Serif:**
-- **Geist Pixel** (1 variants)
-- **Geomini ExtraLight** (1 variants)
-- **Yuyu Short** (1 variants)
-- **Yuyu** (1 variants)
-
----
-
 ## [2026/06] - 2026-06-01
 
 ## 📈 Database Changes
