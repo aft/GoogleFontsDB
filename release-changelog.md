@@ -1,14 +1,11 @@
 ## 📈 Database Changes
 
-**Total font families:** 2,419 (+5 from previous version)
+**Total font families:** 2,423 (+4 from previous version)
 
-### ✨ New Fonts (5)
-
-**Monospace:**
-- **Hibur Mono** (1 variants)
+### ✨ New Fonts (4)
 
 **Sans-Serif:**
-- **Geist Pixel** (1 variants)
-- **Geomini ExtraLight** (1 variants)
-- **Yuyu Short** (1 variants)
-- **Yuyu** (1 variants)
+- **Caacupe One** (1 variants)
+- **Nevermind** (2 variants)
+- **Scoutie Sans ExtraLight** (2 variants)
+- **Valley Sans Thin** (2 variants)

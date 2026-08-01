@@ -2,22 +2,6 @@
 
 All notable changes to the Google Fonts database will be documented in this file.
 
-## [2026/08] - 2026-08-01
-
-## 📈 Database Changes
-
-**Total font families:** 2,423 (+4 from previous version)
-
-### ✨ New Fonts (4)
-
-**Sans-Serif:**
-- **Caacupe One** (1 variants)
-- **Nevermind** (2 variants)
-- **Scoutie Sans ExtraLight** (2 variants)
-- **Valley Sans Thin** (2 variants)
-
----
-
 ## [2026/07] - 2026-07-01
 
 ## 📈 Database Changes

@@ -1,20 +1,20 @@
 {
-  "generated": "2026-08-01T05:23:33.864052Z",
-  "database_version": "2026/08",
-  "database_updated": "2026-08-01T05:23:04.454441Z",
+  "generated": "2026-07-01T06:21:44.601666Z",
+  "database_version": "2026/07",
+  "database_updated": "2026-07-01T06:21:16.740103Z",
   "basic": {
-    "total_families": 2423,
-    "total_variants": 3883,
+    "total_families": 2419,
+    "total_variants": 3876,
     "avg_variants_per_family": 1.6,
     "categories": {
-      "sans-serif": 2150,
-      "serif": 128,
+      "sans-serif": 2144,
+      "serif": 129,
       "monospace": 67,
       "handwriting": 50,
-      "display": 28
+      "display": 29
     },
     "weights": {
-      "400": 2631,
+      "400": 2624,
       "700": 522,
       "300": 223,
       "500": 125,
@@ -24,52 +24,52 @@
       "900": 67
     },
     "styles": {
-      "normal": 3160,
-      "italic": 720,
+      "normal": 3156,
+      "italic": 717,
       "oblique": 3
     }
   },
   "file_sizes": {
     "overall": {
-      "total_files": 2697,
-      "total_size_mb": 1790.52,
-      "avg_size_kb": 679.83,
-      "median_size_kb": 154.44,
+      "total_files": 2693,
+      "total_size_mb": 1789.98,
+      "avg_size_kb": 680.63,
+      "median_size_kb": 154.59,
       "min_size_kb": 14.45,
       "max_size_kb": 57346.46,
-      "std_dev_kb": 2577.39
+      "std_dev_kb": 2579.22
     },
     "by_category": {
       "sans-serif": {
-        "count": 2383,
-        "avg_size_kb": 663.22,
-        "total_size_mb": 1543.41
+        "count": 2375,
+        "avg_size_kb": 663.12,
+        "total_size_mb": 1538.0
+      },
+      "serif": {
+        "count": 160,
+        "avg_size_kb": 1152.11,
+        "total_size_mb": 180.02
       },
       "monospace": {
         "count": 79,
         "avg_size_kb": 607.92,
         "total_size_mb": 46.9
       },
+      "display": {
+        "count": 29,
+        "avg_size_kb": 243.34,
+        "total_size_mb": 6.89
+      },
       "handwriting": {
         "count": 50,
         "avg_size_kb": 372.32,
         "total_size_mb": 18.18
-      },
-      "serif": {
-        "count": 157,
-        "avg_size_kb": 1144.82,
-        "total_size_mb": 175.52
-      },
-      "display": {
-        "count": 28,
-        "avg_size_kb": 237.86,
-        "total_size_mb": 6.5
       }
     },
     "by_weight": {
       "400": {
-        "count": 1766,
-        "avg_size_kb": 732.74
+        "count": 1765,
+        "avg_size_kb": 733.08
       },
       "300": {
         "count": 85,
@@ -87,13 +87,13 @@
         "count": 37,
         "avg_size_kb": 637.53
       },
-      "900": {
-        "count": 18,
-        "avg_size_kb": 697.13
-      },
       "200": {
         "count": 43,
         "avg_size_kb": 329.83
+      },
+      "900": {
+        "count": 18,
+        "avg_size_kb": 697.13
       },
       "600": {
         "count": 22,
@@ -102,52 +102,52 @@
     }
   },
   "previews": {
-    "families_with_previews": 2352,
-    "total_compressed_size": 8328184,
-    "avg_preview_size": 3541.0,
+    "families_with_previews": 2348,
+    "total_compressed_size": 8318964,
+    "avg_preview_size": 3543,
     "median_preview_size": 2140.0,
     "min_preview_size": 208,
     "max_preview_size": 119520,
-    "total_preview_size_mb": 7.94
+    "total_preview_size_mb": 7.93
   },
   "licenses": {
     "distribution": {
       "OFL": 2363,
       "LICENSE": 42,
-      "Open Source": 7,
       "Apache": 6,
-      "LICENCE": 5
+      "LICENCE": 5,
+      "Open Source": 3
     },
     "by_category": {
       "sans-serif": {
-        "OFL": 2090,
+        "OFL": 2088,
         "LICENSE": 42,
-        "Open Source": 7,
         "Apache": 6,
-        "LICENCE": 5
+        "LICENCE": 5,
+        "Open Source": 3
+      },
+      "serif": {
+        "OFL": 129
       },
       "monospace": {
         "OFL": 67
       },
+      "display": {
+        "OFL": 29
+      },
       "handwriting": {
         "OFL": 50
-      },
-      "serif": {
-        "OFL": 128
-      },
-      "display": {
-        "OFL": 28
       }
     }
   },
   "popular": {
     "most_variants": [
       {
-        "family": "Prompt",
+        "family": "Barlow Condensed",
         "variants": 18
       },
       {
-        "family": "Fira Sans Extra Condensed",
+        "family": "Prompt",
         "variants": 18
       },
       {
@@ -155,27 +155,7 @@
         "variants": 18
       },
       {
-        "family": "Lato",
-        "variants": 18
-      },
-      {
         "family": "Trirong",
-        "variants": 18
-      },
-      {
-        "family": "Barlow Semi Condensed",
-        "variants": 18
-      },
-      {
-        "family": "Fira Sans",
-        "variants": 18
-      },
-      {
-        "family": "Fira Sans Condensed",
-        "variants": 18
-      },
-      {
-        "family": "Barlow Condensed",
         "variants": 18
       },
       {
@@ -183,7 +163,27 @@
         "variants": 18
       },
       {
+        "family": "Lato",
+        "variants": 18
+      },
+      {
+        "family": "Fira Sans Condensed",
+        "variants": 18
+      },
+      {
+        "family": "Fira Sans",
+        "variants": 18
+      },
+      {
+        "family": "Barlow Semi Condensed",
+        "variants": 18
+      },
+      {
         "family": "Montserrat Alternates",
+        "variants": 18
+      },
+      {
+        "family": "Fira Sans Extra Condensed",
         "variants": 18
       },
       {
@@ -195,7 +195,7 @@
         "variants": 16
       },
       {
-        "family": "Rounded Mplus 1c",
+        "family": "Alegreya Sans SC",
         "variants": 14
       },
       {
@@ -203,45 +203,45 @@
         "variants": 14
       },
       {
-        "family": "Alegreya Sans SC",
+        "family": "Rounded Mplus 1c",
         "variants": 14
-      },
-      {
-        "family": "Fahkwang",
-        "variants": 12
-      },
-      {
-        "family": "Bai Jamjuree",
-        "variants": 12
       },
       {
         "family": "Chakra Petch",
         "variants": 12
       },
       {
-        "family": "KoHo",
+        "family": "Niramit",
+        "variants": 12
+      },
+      {
+        "family": "Fahkwang",
+        "variants": 12
+      },
+      {
+        "family": "Kodchasan",
         "variants": 12
       }
     ],
     "most_weights": [
       {
+        "family": "Barlow Condensed",
+        "weights": 8
+      },
+      {
+        "family": "Saira ExtraCondensed",
+        "weights": 8
+      },
+      {
+        "family": "Saira SemiCondensed",
+        "weights": 8
+      },
+      {
         "family": "Prompt",
         "weights": 8
       },
       {
-        "family": "Encode Sans Semi Expanded",
-        "weights": 8
-      },
-      {
-        "family": "Fira Sans Extra Condensed",
-        "weights": 8
-      },
-      {
         "family": "Taviraj",
-        "weights": 8
-      },
-      {
-        "family": "Lato",
         "weights": 8
       },
       {
@@ -253,27 +253,15 @@
         "weights": 8
       },
       {
-        "family": "Barlow Semi Condensed",
-        "weights": 8
-      },
-      {
-        "family": "Encode Sans Semi Condensed",
-        "weights": 8
-      },
-      {
         "family": "Gothic A1",
         "weights": 8
       },
       {
-        "family": "Fira Sans",
+        "family": "Barlow",
         "weights": 8
       },
       {
-        "family": "Saira SemiCondensed",
-        "weights": 8
-      },
-      {
-        "family": "Saira Condensed",
+        "family": "Lato",
         "weights": 8
       },
       {
@@ -281,12 +269,24 @@
         "weights": 8
       },
       {
-        "family": "Encode Sans Expanded",
+        "family": "Encode Sans Semi Condensed",
+        "weights": 8
+      },
+      {
+        "family": "Fira Sans",
+        "weights": 8
+      },
+      {
+        "family": "Barlow Semi Condensed",
+        "weights": 8
+      },
+      {
+        "family": "Montserrat Alternates",
         "weights": 8
       }
     ],
-    "single_variant_families": 1748,
-    "multi_variant_families": 675
+    "single_variant_families": 1747,
+    "multi_variant_families": 672
   },
   "quality": {
     "completeness": {
@@ -305,28 +305,28 @@
       "weights_covered": 8,
       "most_common_category": [
         "sans-serif",
-        2150
+        2144
       ],
       "most_common_weight": [
         400,
-        2631
+        2624
       ]
     }
   },
   "database": {
-    "original_database_size_kb": 9217.68,
+    "original_database_size_kb": 9207.0,
     "optimized_files": {
-      "font-database-optimized.json": 9217.68,
-      "font-database.json.gz": 6262.53
+      "font-database-optimized.json": 9207.0,
+      "font-database.json.gz": 6259.07
     },
     "index_files": {
-      "font-families-index.json": 40.89,
-      "font-categories-index.json": 40.94,
-      "font-popular-index.json": 3.79
+      "font-families-index.json": 40.82,
+      "font-categories-index.json": 40.88,
+      "font-popular-index.json": 3.81
     },
-    "database_version": "2026/08",
-    "last_updated": "2026-08-01T05:23:04.454441Z",
+    "database_version": "2026/07",
+    "last_updated": "2026-07-01T06:21:16.740103Z",
     "optimization_applied": true,
-    "total_distribution_size_kb": 24783.51
+    "total_distribution_size_kb": 24758.58
   }
 }
