@@ -2,19 +2,6 @@
 
 All notable changes to the Google Fonts database will be documented in this file.
 
-## [2026/09] - 2026-09-01
-
-## 📈 Database Changes
-
-**Total font families:** 2,424 (+1 from previous version)
-
-### ✨ New Fonts (1)
-
-**Sans-Serif:**
-- **Asap Sharp** (2 variants)
-
----
-
 ## [2026/08] - 2026-08-01
 
 ## 📈 Database Changes

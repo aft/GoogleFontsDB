@@ -1,0 +1,17 @@
+{
+  "archived_date": "2026-09-01T07:06:17.813712Z",
+  "archive_path": "archives/2026/09",
+  "archived_files": [
+    "font-database.json",
+    "font-database-optimized.json",
+    "font-database.json.gz",
+    "font-families-index.json",
+    "font-categories-index.json",
+    "font-popular-index.json",
+    "stats.json",
+    "checksums.json",
+    "CHANGELOG.md"
+  ],
+  "file_count": 9,
+  "database_version": "2026/08"
+}
